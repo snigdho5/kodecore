@@ -443,8 +443,7 @@ class Customers extends CI_Controller
 						'pan_no' => $custdata->pan_no,
 						'aadhaar_no' => $custdata->aadhaar_no,
 						'kyc_pan_file' => ($custdata->kyc_pan_file != '') ? base_url() . 'uploads/images/' . $custdata->kyc_pan_file : '',
-						'kyc_aadhaar_file' => ($custdata->kyc_aadhaar_file != '') ? base_url() . 'uploads/images/' . $custdata->kyc_aadhaar_file : '',
-						
+						'kyc_aadhaar_file' => ($custdata->kyc_aadhaar_file != '') ? base_url() . 'uploads/images/' . $custdata->kyc_aadhaar_file : ''
 					);
 					// print_obj($return['user_data']);die;
 					$return['success'] = '1';
