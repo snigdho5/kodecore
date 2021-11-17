@@ -1790,7 +1790,7 @@ class Api extends CI_Controller
                                         'user_name'  => $getCustomerProject->first_name . ' ' . $getCustomerProject->last_name,
                                         'user_email'  => $getCustomerProject->email,
                                         'user_phone'  => $getCustomerProject->phone,
-                                        'project_amount' => $getCustomerProject->project_amount,
+                                        'project_amount' => $getCustomerProject->proj_amount,
                                         'received_amount' => $getCustomerProject->received_amount,
                                         'application_status' => $getCustomerProject->application_status,
                                         'payment_status' => $getCustomerProject->payment_status,
@@ -1813,6 +1813,8 @@ class Api extends CI_Controller
 
                                 $getCustomerProject = $this->am->getCustomerProjects($paramcheck, TRUE);
 
+                                // print_obj($getCustomerProject);die;
+ 
                                 if (!empty($getCustomerProject)) {
                                     foreach ($getCustomerProject as $key => $value) {
 
@@ -1840,7 +1842,7 @@ class Api extends CI_Controller
                                         $user_name = $value->first_name . ' ' . $value->last_name;
                                         $email = $value->email;
                                         $phone = $value->phone;
-                                        $project_amount = $value->project_amount;
+                                        $project_amount = $value->proj_amount;
                                         $subtotal = $value->subtotal;
                                         $gst_per = $value->gst_per;
                                         $gst_rate = $value->gst_rate;
@@ -1910,6 +1912,11 @@ class Api extends CI_Controller
                                             <tr>
                                             <td style="width:20%; height: 20px;">GST Percentage (%):</td>
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
+                                            </tr>
+
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">GST Rate:</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
                                             </tr>
    
                                             <tr>
@@ -2468,6 +2475,12 @@ class Api extends CI_Controller
                                              <tr>
                                              <td style="width:20%; height: 20px;">GST Percentage (%):</td>
                                              <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
+                                             </tr>
+
+                                             
+                                             <tr>
+                                             <td style="width:20%; height: 20px;">GST Rate:</td>
+                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
                                              </tr>
     
                                              <tr>
@@ -3673,6 +3686,12 @@ class Api extends CI_Controller
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
                                          </tr>
 
+                                          
+                                         <tr>
+                                         <td style="width:20%; height: 20px;">GST Rate:</td>
+                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
+                                         </tr>
+
                                          <tr>
                                          <td style="width:20%; height: 20px;">TDS Percentage (%):</td>
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_per</td>
@@ -3834,6 +3853,12 @@ class Api extends CI_Controller
                                          <tr>
                                          <td style="width:20%; height: 20px;">GST Percentage (%):</td>
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
+                                         </tr>
+
+                                          
+                                         <tr>
+                                         <td style="width:20%; height: 20px;">GST Rate:</td>
+                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
                                          </tr>
 
                                          <tr>
