@@ -10,13 +10,13 @@ class Api extends CI_Controller
 
         $this->load->library('email');
         $config = array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'smtp.googlemail.com',
-            'smtp_port' => 465,
+            // 'protocol' => 'smtp',
+            // 'smtp_host' => 'smtp.googlemail.com',
+            // 'smtp_port' => 465,
             // 'smtp_user' => ADMIN_EMAIL,
             // 'smtp_pass' => ADMIN_EMAIL_PASS,
-            'smtp_user' => 'noreply@staqo.com',
-            'smtp_pass' => 'Welcome@123',
+            // 'smtp_user' => 'noreply@staqo.com',
+            // 'smtp_pass' => 'Welcome@123',
             'mailtype' => 'html',
             'smtp_crypto' => 'ssl',
             'smtp_timeout' => '4',

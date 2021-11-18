@@ -102,7 +102,7 @@ define('ABS_PATH_', '/var/www/html/kodecore/uploads/invoices/');//211
 define('ABS_IMG_PATH_', '/var/www/html/kodecore/uploads/images/');//211
 define('UP_FILEPATH', '');
 
-define('FROM_EMAIL', 'snigdho.lnsel@gmail.com');
+define('FROM_EMAIL', 'noreply@kodecore.com');
 define('ADMIN_EMAIL', 'snigdho.lnsel@gmail.com');
 define('ADMIN_EMAIL_PASS', 'Snigdho_2015');
 define("secretKey", "dfdbayYfd4566541cvxcT34#gt55");

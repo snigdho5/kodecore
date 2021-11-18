@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
-$active_group = 'server';
+$active_group = 'server_live';
 $query_builder = TRUE;
 
 $db['default'] = array(
@@ -102,6 +102,28 @@ $db['server'] = array(
 	'username' => 'root',
 	'password' => 'Lnsel_DB_2018',
 	'database' => 'kodecore',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+$db['server_live'] = array(
+	'dsn'	=> '',
+	'hostname' => 'localhost',
+	'username' => 'kodeco_dev',
+	'password' => 'I9E9%qgF5,QK',
+	'database' => 'kodeco_app',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
