@@ -108,8 +108,8 @@ define("accessKey", "3EC5C12E6G34L34ED2E36A9");
 
 //firebase
 define('API_ACCESS_KEY', 'AAAA8FyQge8:APA91bG6tiDdqfYWwSocO_mIHRy6BpRnTxeOwQHX_TiYCzsOF3Ng7q4uh88AB5TIWtxt0_dQ8ZhYp-Hsqsei_V_JmeSJKzB65pyLWDfvBrviW7VZWMky3vXJjiPHrwUuadYj2YQbOXTB');
-define('NOTIFICATION_ICON', 'https://dev.solutionsfinder.co.uk/dataar/uploads/admin/1622800561-user2-160x160.jpg');
-define('CLICK_ACTION', 'https://dev.solutionsfinder.co.uk/dataar/');
+define('NOTIFICATION_ICON', 'https://kodecore.com/wp-content/uploads/2021/04/logo.png');
+define('CLICK_ACTION', 'https://kodecore.com/');
 define('FCM_URL', 'https://fcm.googleapis.com/fcm/send');
 
 //rajorpay

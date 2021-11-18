@@ -1899,11 +1899,11 @@ class Api extends CI_Controller
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$pay_status</td>
                                             </tr>
 
-
                                             <tr>
                                             <td style="width:20%; height: 20px;">Status:</td>
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$appl_status</td>
                                             </tr>
+
                                             <tr>
                                             <td style="width:20%; height: 20px;">Actual Amount:</td>
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$subtotal</td>
