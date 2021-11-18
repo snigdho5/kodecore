@@ -96,8 +96,10 @@ define('api_secretKey', '1b311742e41ac2f88b54597ed0cf67870dad2e6e');//api
 define('capSiteKey', '6Leqxq8ZAAAAALTvA0t1jmAC3iG55LooV-s647Vi');//gcaptcha
 define('SOURCE_EMAIL', 'no-reply@test.com');
 define('PAGE_URL', '');
-define('ABS_PATH', '/var/www/html/kodecore/uploads/invoices/');//211
-define('ABS_IMG_PATH', '/var/www/html/kodecore/uploads/images/');//211
+define('ABS_PATH', '/home/kodeco/public_html/app/uploads/invoices/');//kodecore
+define('ABS_IMG_PATH', '/home/kodeco/public_html/app/uploads/images/');//kodecore
+define('ABS_PATH_', '/var/www/html/kodecore/uploads/invoices/');//211
+define('ABS_IMG_PATH_', '/var/www/html/kodecore/uploads/images/');//211
 define('UP_FILEPATH', '');
 
 define('FROM_EMAIL', 'snigdho.lnsel@gmail.com');
