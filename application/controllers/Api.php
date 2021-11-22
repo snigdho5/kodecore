@@ -4245,6 +4245,34 @@ class Api extends CI_Controller
                                 }
                                 //send notification ends
 
+                                //email starts
+                                if (!empty($userDetails)){
+
+                                    $name = $userDetails->first_name . ' ' . $userDetails->last_name;
+                                    $subject = 'Withdrawal request';
+                                    $body = '';
+                                    $body .= '<p>Hello, </p>';
+                                    $body .= '<p>You have got a withdrawal request from <b>' . $name . '</b>.</p>';
+                                    $body .= '<p><b>Amount : </b>' . $amount . '</p>';
+                                    $body .= '<p>Login to admin panel for more details.</p>';
+                                    $body .= '<br><p>** This is a system generated email. Please do not reply to this email..</p>';
+
+                                    $this->email->set_newline("\r\n");
+                                    $this->email->set_mailtype("html");
+                                    $this->email->from(FROM_EMAIL, 'Kode Core');
+                                    $this->email->to(ADMIN_EMAIL);
+                                    //$this->email->reply_to($replyemail);
+                                    $this->email->subject($subject);
+                                    $this->email->message($body);
+                                    if ($this->email->send()) {
+                                        $return['mail_status'] = 'E-mail sent';
+                                    } else {
+                                        // echo $this->email->print_debugger();die;
+                                        $return['mail_status'] = 'E-mail not sent!';
+                                    }
+                                }
+                                //email ends
+                                 
 
                                 $return['respData'] = [];
                                 $return['success'] = 1;
