@@ -49,6 +49,8 @@ $route['changeproject'] = 'ITProjects/onChangeProject';
 $route['delproject'] = 'ITProjects/onDeleteProject';
 $route['applied-it-projects/(:any)'] = 'ITProjects/onGetAppliedProject/$1';
 
+$route['monthly-payout-it-projects'] = 'ITProjects/onGetPayoutITProject';
+
 //investment plans management
 $route['investment-plans'] = 'InvestmentPlans/index';
 $route['duplicate_check_ip'] = 'InvestmentPlans/onCheckDuplicateInvPlan';

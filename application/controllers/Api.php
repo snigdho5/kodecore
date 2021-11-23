@@ -1569,7 +1569,7 @@ class Api extends CI_Controller
                     if (!empty($decodedParam)) {
 
                         //validation starts
-                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->it_proj_id) && $decodedParam->it_proj_id != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '') {
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->it_proj_id) && $decodedParam->it_proj_id != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '' && isset($decodedParam->payment_breakup) && $decodedParam->payment_breakup != '') {
 
                             $if_not_blank = 1; //not blank
                             $customer_id = xss_clean($decodedParam->user_id);
@@ -1582,6 +1582,7 @@ class Api extends CI_Controller
                             $grand_total = xss_clean($decodedParam->grand_total);
                             $payment_status = xss_clean($decodedParam->payment_status);
                             $payment_response = xss_clean($decodedParam->payment_id);
+                            $payment_breakup = xss_clean($decodedParam->payment_breakup);
 
                             //validations
                             if($payment_status == 1){
@@ -1590,6 +1591,32 @@ class Api extends CI_Controller
                                 $if_pay_status = 0;
                                 $out_message += array('valid_fields' => 'Payment is not successful!');
                             }
+
+                            if($payment_breakup == 2){
+                                //if installment is selected then check
+                                $installment_serial = (isset($decodedParam->installment_serial) && $decodedParam->installment_serial != '')?xss_clean($decodedParam->installment_serial):'';//1,2
+                                $enter_breakup = (isset($decodedParam->first_installment_per) && $decodedParam->first_installment_per != '')?xss_clean($decodedParam->first_installment_per):'';
+                                $enter_breakup2 = (isset($decodedParam->last_installment_per) && $decodedParam->last_installment_per)?xss_clean($decodedParam->last_installment_per):'';
+                                $first_installment_amt = (isset($decodedParam->first_installment_amt) && $decodedParam->first_installment_amt)?xss_clean($decodedParam->first_installment_amt):'';
+                                $last_installment_amt = (isset($decodedParam->last_installment_amt) && $decodedParam->last_installment_amt)?xss_clean($decodedParam->last_installment_amt):'';
+
+                                if($installment_serial != '' && $enter_breakup != '' && $enter_breakup2 != '' && $first_installment_amt != '' && $last_installment_amt != ''){
+                                    $if_ins_status = 1;
+                                }else{
+                                    $if_ins_status = 0;
+                                    $out_message += array('valid_fields' => 'Installment details are missing!');
+                                }
+                                
+                            }else{
+                                //full payment
+                                $installment_serial = '0';
+                                $enter_breakup = '0.00';
+                                $enter_breakup2 = '0.00';
+                                $first_installment_amt = '0.00';
+                                $last_installment_amt = '0.00';
+
+                                $if_ins_status = 1;
+                            }
                         } else {
                             $if_not_blank = 0;
                             $out_message += array('valid_fields' => 'Missing Required Fields!!');
@@ -1597,7 +1624,7 @@ class Api extends CI_Controller
                         //validation ends
 
                         //check if valid
-                        if ($if_not_blank == 1 && $if_pay_status == 1) {
+                        if ($if_not_blank == 1 && $if_pay_status == 1 && $if_ins_status == 1) {
 
                             $paramcheck = array(
                                 'customer_id' => $customer_id,
@@ -1618,6 +1645,12 @@ class Api extends CI_Controller
                                     'subtotal' => $received_amount,
                                     'payment_status' => $payment_status,
                                     'payment_response' => $payment_response,
+                                    'payment_breakup' => $payment_breakup,
+                                    'installment_serial' => $installment_serial,
+                                    'enter_breakup' => $enter_breakup,
+                                    'enter_breakup2' => $enter_breakup2,
+                                    'first_installment_amt' => $first_installment_amt,
+                                    'last_installment_amt' => $last_installment_amt,
                                     'added_dtime' => dtime
                                 );
                                 $added = $this->am->addCustomerProject($param);
@@ -1802,6 +1835,7 @@ class Api extends CI_Controller
                                         'received_amount' => $getCustomerProject->received_amount,
                                         'application_status' => $getCustomerProject->application_status,
                                         'payment_status' => $getCustomerProject->payment_status,
+                                        'installment_serial' => $getCustomerProject->installment_serial,
                                         'dtime' => $getCustomerProject->added_dtime,
                                         'payment_mode' => $getCustomerProject->payment_mode
                                     );
@@ -1970,6 +2004,7 @@ class Api extends CI_Controller
                                             'received_amount' => $received_amount,
                                             'application_status' => $value->application_status,
                                             'payment_status' => $value->payment_status,
+                                            'installment_serial' => $value->installment_serial,
                                             'dtime' => $dtime,
                                             'payment_mode' => $value->payment_mode,
                                             'filepath' => $filepath

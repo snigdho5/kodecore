@@ -330,4 +330,34 @@ class ITProjects extends CI_Controller
             redirect(base_url());
         }
     }
+
+    
+    public function onGetPayoutITProject()
+    {
+        if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1) {
+            $this->data['page_title'] = 'IT Projects';
+            $projectsdata = $this->am->getProjectData(null, $many = TRUE);
+            if ($projectsdata) {
+                foreach ($projectsdata as $key => $value) {
+                    $this->data['proj_data'][] = array(
+                        'dtime'  => $value->added_dtime,
+                        'projid'  => $value->proj_id,
+                        'title'  => $value->proj_title,
+                        'description'  => $value->proj_description,
+                        'amount'  => $value->proj_amount,
+                        'duration'  => $value->proj_duration,
+                        'editeddtime'  => $value->edited_dtime
+                    );
+                }
+
+                //print_obj($this->data['proj_data']);die;
+
+            } else {
+                $this->data['proj_data'] = '';
+            }
+            $this->load->view('itprojects/monthly_payout_it_projects', $this->data, false);
+        } else {
+            redirect(base_url());
+        }
+    }
 }
