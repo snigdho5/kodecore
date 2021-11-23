@@ -14,7 +14,7 @@ class ITProjects extends CI_Controller
         if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1) {
             $this->data['page_title'] = 'IT Projects';
             $projectsdata = $this->am->getProjectData(null, $many = TRUE);
-            if ($projectsdata) {
+            if (!empty($projectsdata)) {
                 foreach ($projectsdata as $key => $value) {
                     $this->data['proj_data'][] = array(
                         'dtime'  => $value->added_dtime,
@@ -335,9 +335,9 @@ class ITProjects extends CI_Controller
     public function onGetPayoutITProject()
     {
         if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1) {
-            $this->data['page_title'] = 'IT Projects';
+            $this->data['page_title'] = 'IT Projects - Monthly Payout';
             $projectsdata = $this->am->getProjectData(null, $many = TRUE);
-            if ($projectsdata) {
+            if (!empty($projectsdata)) {
                 foreach ($projectsdata as $key => $value) {
                     $this->data['proj_data'][] = array(
                         'dtime'  => $value->added_dtime,

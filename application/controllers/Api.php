@@ -1632,7 +1632,7 @@ class Api extends CI_Controller
                             );
                             $checkCustomerProject = $this->am->getCustomerProjectData($paramcheck);
 
-                            if (empty($checkCustomerProject)) {
+                            // if (empty($checkCustomerProject)) {
                                 $param = array(
                                     'customer_id' => $customer_id,
                                     'proj_id' => $proj_id,
@@ -1670,8 +1670,21 @@ class Api extends CI_Controller
                                             $name = $userDetails->first_name . ' ' . $userDetails->last_name;
                                             //$fcm = 'cNf2---6Vs9';
                                             $icon = NOTIFICATION_ICON;
-                                            $notification_title = 'You bought an IT project';
-                                            $notification_body = 'Thanks for buying an IT project. Payment was successful';
+
+                                            if($payment_breakup == '2'){
+                                                if($installment_serial == '1'){
+                                                    $notification_title = 'You have successfully paid your first installment for an IT project';
+                                                    $notification_body = 'Thanks for buying an IT project. Payment of first installment was successful';
+                                                }else{
+                                                    $notification_title = 'You have successfully paid your last installment for an IT project';
+                                                    $notification_body = 'Thanks for buying an IT project. Payment of last installment was successful';
+                                                }
+                                                
+                                            }else{
+                                                $notification_title = 'You bought an IT project';
+                                                $notification_body = 'Thanks for buying an IT project. Payment was successful';
+                                            }
+                                            
                                             $click_action = CLICK_ACTION;
 
                                             $data = array(
@@ -1746,11 +1759,11 @@ class Api extends CI_Controller
                                     $return['success'] = 0;
                                     $return['message'] = 'IT project not bought successfully!';
                                 }
-                            } else {
-                                $return['respData'] = '';
-                                $return['success'] = 0;
-                                $return['message'] = 'IT project already applied by you!';
-                            }
+                            // } else {
+                            //     $return['respData'] = '';
+                            //     $return['success'] = 0;
+                            //     $return['message'] = 'IT project already applied by you!';
+                            // }
                         } else {
                             $return['respData'] = '';
                             $return['success'] = 0;
@@ -2010,8 +2023,6 @@ class Api extends CI_Controller
                                             'filepath' => $filepath
                                         );
                                     }
-
-
 
                                     $return['respData'] = $resp;
                                     $return['success'] = 1;
