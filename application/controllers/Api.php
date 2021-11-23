@@ -1476,6 +1476,11 @@ class Api extends CI_Controller
                                     'description' => $projdata->proj_description,
                                     'amount' => $projdata->proj_amount,
                                     'duration' => $projdata->proj_duration,
+                                    'payment_breakup' => ($projdata->payment_breakup != '')?$projdata->payment_breakup:'',
+                                    '1st_installment_per' => ($projdata->enter_breakup != '')?$projdata->enter_breakup:'',
+                                    'last_installment_per' => ($projdata->enter_breakup2 != '')?$projdata->enter_breakup2:'',
+                                    'first_installment_amt' => ($projdata->first_installment_amt != '')?$projdata->first_installment_amt:'',
+                                    'last_installment_amt' => ($projdata->last_installment_amt != '')?$projdata->last_installment_amt:'',
                                     'added_dtime' => $projdata->added_dtime,
                                     'status' => $projdata->status
                                 );
@@ -1502,6 +1507,11 @@ class Api extends CI_Controller
                                         'description' => $value->proj_description,
                                         'amount' => $value->proj_amount,
                                         'duration' => $value->proj_duration,
+                                        'payment_breakup' => ($value->payment_breakup != '')?$value->payment_breakup:'',
+                                        '1st_installment_per' => ($value->enter_breakup != '')?$value->enter_breakup:'',
+                                        'last_installment_per' => ($value->enter_breakup2 != '')?$value->enter_breakup2:'',
+                                        'first_installment_amt' => ($value->first_installment_amt != '')?$value->first_installment_amt:'',
+                                        'last_installment_amt' => ($value->last_installment_amt != '')?$value->last_installment_amt:'',
                                         'added_dtime' => $value->added_dtime,
                                         'status' => $value->status
                                     );
@@ -4166,129 +4176,121 @@ class Api extends CI_Controller
                         //check if valid
                         if ($if_not_blank == 1) {
 
-                            // if (isset($crypto_id) && $crypto_id != '') {
-                            //     $paramUp = array('crypto_pid' => $crypto_id, 'customer_id' => $customer_id);
-                            // } else {
-                            //     $paramUp = array('customer_id' => $customer_id);
-                            // }
+                            $userDetails  =   $this->am->getCustomerData(array('customer_id' => $customer_id));
 
-                            // $getCrypto = $this->am->getCryptoBuyData($paramUp, TRUE);
+                            if (!empty($userDetails)) {
 
-                            // if (!empty($getCrypto)) {
-
-                            $add_arr = array(
-                                'customer_id' => $customer_id,
-                                'amount' => $amount,
-                                'dtime' => dtime
-                            );
-
-                            $added = $this->am->addWalletWithdrawal($add_arr);
-
-                            if ($added) {
-
-                                //send notification starts
-                                $userDetails  =   $this->am->getCustomerData(array('customer_id' => $customer_id));
-
-                                // print_obj($userDetails);die;
-                                if (!empty($userDetails) && $userDetails->fcm_token != '') {
-                                    $fcm = $userDetails->fcm_token;
-                                    $name = $userDetails->first_name . ' ' . $userDetails->last_name;
-                                    //$fcm = 'cNf2---6Vs9';
-                                    $icon = NOTIFICATION_ICON;
-                                    $notification_title = 'Withdrawal requested successfully';
-                                    $notification_body = 'Congrats! We got your Withdrawal request. We will let you know as soon as it gets approved.';
-                                    $click_action = CLICK_ACTION;
-
-                                    $data = array(
-                                        "to" => $fcm,
-                                        "notification" => array(
-                                            "title" => $notification_title,
-                                            "body" => $notification_body,
-                                            "icon" => $icon,
-                                            "click_action" => $click_action
-                                        )
+                                if($userDetails->wallet_amount >= $amount){
+                                    $add_arr = array(
+                                        'customer_id' => $customer_id,
+                                        'amount' => $amount,
+                                        'dtime' => dtime
                                     );
-                                    $data_string = json_encode($data);
-
-                                    //echo "The Json Data : " . $data_string;
-
-                                    $headers = array(
-                                        'Authorization: key=' . API_ACCESS_KEY,
-                                        'Content-Type: application/json'
-                                    );
-
-                                    $ch = curl_init();
-
-                                    curl_setopt($ch, CURLOPT_URL, FCM_URL);
-                                    curl_setopt($ch, CURLOPT_POST, true);
-                                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-
-                                    $result = curl_exec($ch);
-
-                                    curl_close($ch);
-
-                                    $result_ar = json_decode($result);
-                                    // print_obj($result_ar);die;
-                                    if (!empty($result_ar) && $result_ar->success == 1) {
-                                        $logData = array(
-                                            'customer_id' => $customer_id,
-                                            "notification_title" => $notification_title,
-                                            "notification_body" => $notification_body,
-                                            "notification_event" => 'withdrawal_requested',
-                                            "dtime" => dtime
+        
+                                    $added = $this->am->addWalletWithdrawal($add_arr);
+    
+                                    //send notification starts
+    
+                                    // print_obj($userDetails);die;
+                                    if ($userDetails->fcm_token != '') {
+                                        $fcm = $userDetails->fcm_token;
+                                        $name = $userDetails->first_name . ' ' . $userDetails->last_name;
+                                        //$fcm = 'cNf2---6Vs9';
+                                        $icon = NOTIFICATION_ICON;
+                                        $notification_title = 'Withdrawal requested successfully';
+                                        $notification_body = 'Congrats! We got your Withdrawal request. We will let you know as soon as it gets approved.';
+                                        $click_action = CLICK_ACTION;
+    
+                                        $data = array(
+                                            "to" => $fcm,
+                                            "notification" => array(
+                                                "title" => $notification_title,
+                                                "body" => $notification_body,
+                                                "icon" => $icon,
+                                                "click_action" => $click_action
+                                            )
                                         );
-
-                                        $addLog = $this->am->addNotificationLog($logData);
+                                        $data_string = json_encode($data);
+    
+                                        //echo "The Json Data : " . $data_string;
+    
+                                        $headers = array(
+                                            'Authorization: key=' . API_ACCESS_KEY,
+                                            'Content-Type: application/json'
+                                        );
+    
+                                        $ch = curl_init();
+    
+                                        curl_setopt($ch, CURLOPT_URL, FCM_URL);
+                                        curl_setopt($ch, CURLOPT_POST, true);
+                                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    
+                                        $result = curl_exec($ch);
+    
+                                        curl_close($ch);
+    
+                                        $result_ar = json_decode($result);
+                                        // print_obj($result_ar);die;
+                                        if (!empty($result_ar) && $result_ar->success == 1) {
+                                            $logData = array(
+                                                'customer_id' => $customer_id,
+                                                "notification_title" => $notification_title,
+                                                "notification_body" => $notification_body,
+                                                "notification_event" => 'withdrawal_requested',
+                                                "dtime" => dtime
+                                            );
+    
+                                            $addLog = $this->am->addNotificationLog($logData);
+                                        }
                                     }
-                                }
-                                //send notification ends
-
-                                //email starts
-                                if (!empty($userDetails)){
-
-                                    $name = $userDetails->first_name . ' ' . $userDetails->last_name;
-                                    $subject = 'Withdrawal request';
-                                    $body = '';
-                                    $body .= '<p>Hello, </p>';
-                                    $body .= '<p>You have got a withdrawal request from <b>' . $name . '</b>.</p>';
-                                    $body .= '<p><b>Amount : </b>' . $amount . '</p>';
-                                    $body .= '<p>Login to admin panel for more details.</p>';
-                                    $body .= '<br><p>** This is a system generated email. Please do not reply to this email..</p>';
-
-                                    $this->email->set_newline("\r\n");
-                                    $this->email->set_mailtype("html");
-                                    $this->email->from(FROM_EMAIL, 'Kode Core');
-                                    $this->email->to(ADMIN_EMAIL);
-                                    //$this->email->reply_to($replyemail);
-                                    $this->email->subject($subject);
-                                    $this->email->message($body);
-                                    if ($this->email->send()) {
-                                        $return['mail_status'] = 'E-mail sent';
-                                    } else {
-                                        // echo $this->email->print_debugger();die;
-                                        $return['mail_status'] = 'E-mail not sent!';
+                                    //send notification ends
+    
+                                    //email starts
+                                    if (TRUE){
+    
+                                        $name = $userDetails->first_name . ' ' . $userDetails->last_name;
+                                        $subject = 'Withdrawal request';
+                                        $body = '';
+                                        $body .= '<p>Hello, </p>';
+                                        $body .= '<p>You have got a withdrawal request from <b>' . $name . '</b>.</p>';
+                                        $body .= '<p><b>Amount : </b>' . $amount . '</p>';
+                                        $body .= '<p>Login to admin panel for more details.</p>';
+                                        $body .= '<br><p>** This is a system generated email. Please do not reply to this email..</p>';
+    
+                                        $this->email->set_newline("\r\n");
+                                        $this->email->set_mailtype("html");
+                                        $this->email->from(FROM_EMAIL, 'Kode Core');
+                                        $this->email->to(ADMIN_EMAIL);
+                                        //$this->email->reply_to($replyemail);
+                                        $this->email->subject($subject);
+                                        $this->email->message($body);
+                                        if ($this->email->send()) {
+                                            $return['mail_status'] = 'E-mail sent';
+                                        } else {
+                                            // echo $this->email->print_debugger();die;
+                                            $return['mail_status'] = 'E-mail not sent!';
+                                        }
                                     }
+                                    //email ends
+                                     
+    
+                                    $return['respData'] = [];
+                                    $return['success'] = 1;
+                                    $return['message'] = 'Withdrawal requested successfully!';
+                                }else{
+                                    $return['respData'] = [];
+                                    $return['success'] = 0;
+                                    $return['message'] = 'Wallet amount is less than requested amount!';
                                 }
-                                //email ends
-                                 
 
-                                $return['respData'] = [];
-                                $return['success'] = 1;
-                                $return['message'] = 'Withdrawal requested successfully!';
                             } else {
                                 $return['respData'] = [];
                                 $return['success'] = 0;
                                 $return['message'] = 'Withdrawal request failure!';
                             }
 
-
-                            // } else {
-                            //     $return['respData'] = [];
-                            //     $return['success'] = 0;
-                            //     $return['message'] = ' data is missing!';
-                            // }
                         } else {
                             $return['respData'] = [];
                             $return['success'] = 0;

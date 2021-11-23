@@ -595,6 +595,12 @@ class Auth_model extends MY_Model
 			customers.last_name,
 			customers.email,
 			customers.phone,
+			customers.wallet_amount,
+			customers.bank_name,
+			customers.branch_name,
+			customers.ac_no,
+			customers.ifsc,
+			customers.ac_name
 		  	');
 
 		$this->db->join('customers', 'customers.customer_id = customer_wallet_withdrawal.customer_id', 'left');

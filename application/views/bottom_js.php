@@ -18,4 +18,19 @@
 <script src="<?php echo base_url().'common/ckeditor/ckeditor.js';?>"></script>
 <script type="text/javascript">
     var BASE_URL = "<?php echo base_url();?>";
+
+    var max_chars = 2;
+    
+    $(document).on('keydown', '.num-upto2', function () {
+        if ($(this).val().length >= max_chars) { 
+            $(this).val($(this).val().substr(0, max_chars));
+        }
+    });
+
+        
+    $(document).on('keyup', '.num-upto2', function () {
+        if ($(this).val().length >= max_chars) { 
+            $(this).val($(this).val().substr(0, max_chars));
+        }
+    });
 </script>

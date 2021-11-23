@@ -65,10 +65,15 @@
 												<th>Name</th>
 												<th>Email</th>
 												<th>Phone</th>
-												<th>Amount</th>
+												<th>Requested Amount</th>
+												<th>Wallet Amount</th>
+												<th>Bank Name</th>
+												<th>Branch Name</th>
+												<th>Ac No</th>
+												<th>IFSC</th>
+												<th>Ac Name</th>
 												<th>Status</th>
 												<th>Action</th>
-
 											</tr>
 										</thead>
 										<tbody class="textcen">
@@ -85,6 +90,12 @@
 														<td><?php echo $val['user_email']; ?></td>
 														<td><?php echo $val['user_phone']; ?></td>
 														<td><?php echo $val['amount']; ?></td>
+														<td><?php echo $val['wallet_amount']; ?></td>
+														<td><?php echo $val['bank_name']; ?></td>
+														<td><?php echo $val['branch_name']; ?></td>
+														<td><?php echo $val['ac_no']; ?></td>
+														<td><?php echo $val['ifsc']; ?></td>
+														<td><?php echo $val['ac_name']; ?></td>
 														<td><?php
 														if($val['status'] == '1'){
 															echo '<i class="icofont-tick-mark" style="color:green;"></i> Approved';

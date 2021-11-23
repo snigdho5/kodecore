@@ -75,7 +75,7 @@ class ITProjects extends CI_Controller
                 'proj_id'  => $proj_id
             );
             $projectsdata = $this->am->getProjectData($chkdata, $many = FALSE);
-            if ($projectsdata) {
+            if (!empty($projectsdata)) {
                 $this->data['proj_data'] = array(
                     'dtime'  => $projectsdata->added_dtime,
                     'projid'  => $projectsdata->proj_id,
@@ -83,6 +83,11 @@ class ITProjects extends CI_Controller
                     'description'  => $projectsdata->proj_description,
                     'amount'  => $projectsdata->proj_amount,
                     'duration'  => $projectsdata->proj_duration,
+                    'payment_breakup'  => $projectsdata->payment_breakup,
+                    'enter_breakup'  => $projectsdata->enter_breakup,
+                    'enter_breakup2'  => $projectsdata->enter_breakup2,
+                    'first_installment_amt'  => $projectsdata->first_installment_amt,
+                    'last_installment_amt'  => $projectsdata->last_installment_amt,
                     'editeddtime'  => $projectsdata->edited_dtime
                 );
                 //print_obj($this->data['proj_data']);die;
@@ -107,6 +112,11 @@ class ITProjects extends CI_Controller
             $description = xss_clean($this->input->post('description'));
             $amount = xss_clean($this->input->post('amount'));
             $duration = xss_clean($this->input->post('duration'));
+            $payment_breakup = xss_clean($this->input->post('payment_breakup'));
+            $enter_breakup = xss_clean($this->input->post('enter_breakup'));
+            $enter_breakup2 = xss_clean($this->input->post('enter_breakup2'));
+            $first_installment_amt = xss_clean($this->input->post('first_installment_amt'));
+            $last_installment_amt = xss_clean($this->input->post('last_installment_amt'));
 
 
             $upd_userdata = array(
@@ -114,13 +124,18 @@ class ITProjects extends CI_Controller
                 'proj_description'  => $description,
                 'proj_amount'  => $amount,
                 'proj_duration'  => $duration,
+                'payment_breakup'  => $payment_breakup,
+                'enter_breakup'  => $enter_breakup,
+                'enter_breakup2'  => $enter_breakup2,
+                'first_installment_amt'  => $first_installment_amt,
+                'last_installment_amt'  => $last_installment_amt,
                 'edited_dtime'  => dtime,
                 'edited_by'  => $this->session->userdata('userid')
             );
             // print_obj($upd_userdata);die;
 
             $projdata = $this->am->getProjectData($chkdata, FALSE);
-            if ($projdata) {
+            if (!empty($projdata)) {
                 //update
 
                 $upduser = $this->am->updateProject($upd_userdata, $chkdata);
@@ -136,15 +151,21 @@ class ITProjects extends CI_Controller
                         'description'  => $projDataUpd->proj_description,
                         'amount'  => $projDataUpd->proj_amount,
                         'duration'  => $projDataUpd->proj_duration,
+                        'payment_breakup'  => $projDataUpd->payment_breakup,
+                        'enter_breakup'  => $projDataUpd->enter_breakup,
+                        'enter_breakup2'  => $projDataUpd->enter_breakup2,
+                        'first_installment_amt'  => $projDataUpd->first_installment_amt,
+                        'last_installment_amt'  => $projDataUpd->last_installment_amt,
                         'editeddtime'  => $projDataUpd->edited_dtime
                     );
                 } else {
                     $this->data['update_failure'] = 'Not updated!';
                 }
 
-                $this->load->view('itprojects/vw_project_edit', $this->data, false);
+                // $this->load->view('itprojects/vw_project_edit', $this->data, false);
+                redirect(base_url('edit-project/'.encode_url($proj_id)));
             } else {
-                redirect(base_url());
+                redirect(base_url('edit-project/'.encode_url($proj_id)));
             }
         } else {
             redirect(base_url());
@@ -171,6 +192,7 @@ class ITProjects extends CI_Controller
                 $this->form_validation->set_rules('description', 'Description', 'trim|required|xss_clean|htmlentities');
                 $this->form_validation->set_rules('amount', 'Amount', 'trim|required|numeric|xss_clean|htmlentities');
                 $this->form_validation->set_rules('duration', 'Duration', 'trim|required|numeric|xss_clean|htmlentities');
+                $this->form_validation->set_rules('payment_breakup', 'Payment Breakup', 'trim|required|numeric|xss_clean|htmlentities');
 
                 if ($this->form_validation->run() == FALSE) {
                     $this->form_validation->set_error_delimiters('', '');
@@ -182,32 +204,52 @@ class ITProjects extends CI_Controller
                     $description = xss_clean($this->input->post('description'));
                     $amount = xss_clean($this->input->post('amount'));
                     $duration = xss_clean($this->input->post('duration'));
+                    $payment_breakup = xss_clean($this->input->post('payment_breakup'));
+                    $enter_breakup = xss_clean($this->input->post('enter_breakup'));
+                    $enter_breakup2 = xss_clean($this->input->post('enter_breakup2'));
+                    $first_installment_amt = xss_clean($this->input->post('first_installment_amt'));
+                    $last_installment_amt = xss_clean($this->input->post('last_installment_amt'));
 
-                    $chkdata = array('proj_title'  => $title);
-                    $projdata = $this->am->getProjectData($chkdata, FALSE);
+                    if($payment_breakup == '2' && $enter_breakup == '' && $enter_breakup == 0 && $enter_breakup2 == '' && $enter_breakup2 == 0){
+                        $return['added'] = 'breakup_blank';
+                        $return['msg'] = 'You have selected Installment option. Please enter Breakup!';
+                    }else{
 
-                    if (!$projdata) {
-                        //add
-
-                        $ins_userdata = array(
-                            'proj_title'  => $title,
-                            'proj_description'  => $description,
-                            'proj_amount'  => $amount,
-                            'proj_duration'  => $duration,
-                            'added_dtime'  => dtime,
-                            'added_by'  => $this->session->userdata('userid')
-                        );
-                        // print_obj($ins_userdata);die;
-                        $addproj = $this->am->addProject($ins_userdata);
-
-                        if ($addproj) {
-                            $return['added'] = 'success';
+                        $chkdata = array('proj_title'  => $title);
+                        $projdata = $this->am->getProjectData($chkdata, FALSE);
+    
+                        if (!$projdata) {
+                            //add
+    
+                            $ins_userdata = array(
+                                'proj_title'  => $title,
+                                'proj_description'  => $description,
+                                'proj_amount'  => $amount,
+                                'proj_duration'  => $duration,
+                                'payment_breakup'  => $payment_breakup,
+                                'enter_breakup'  => $enter_breakup,
+                                'enter_breakup2'  => $enter_breakup2,
+                                'first_installment_amt'  => $first_installment_amt,
+                                'last_installment_amt'  => $last_installment_amt,
+                                'added_dtime'  => dtime,
+                                'added_by'  => $this->session->userdata('userid')
+                            );
+                            // print_obj($ins_userdata);die;
+                            $addproj = $this->am->addProject($ins_userdata);
+    
+                            if ($addproj) {
+                                $return['added'] = 'success';
+                                $return['msg'] = 'Project added successfully!';
+                            } else {
+                                $return['added'] = 'failure';
+                                $return['msg'] = 'Something went wrong!';
+                            }
                         } else {
-                            $return['added'] = 'failure';
+                            $return['added'] = 'already_exists';
+                            $return['msg'] = 'Project already exists!';
                         }
-                    } else {
-                        $return['added'] = 'already_exists';
                     }
+
                 }
 
                 header('Content-Type: application/json');

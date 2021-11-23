@@ -91,7 +91,40 @@
 									<div class="form-group row">
 										<label for="duration" class="col-sm-3 text-right control-label col-form-label">Duration (in months)</label>
 										<div class="col-sm-9">
-											<input type="number" class="form-control" id="duration" name="duration" placeholder="Duration..">
+											<input type="number" class="form-control num-upto2" id="duration" name="duration" placeholder="Duration..">
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<label for="payment_breakup" class="col-sm-3 text-right control-label col-form-label">Payment Breakup</label>
+										<div class="col-sm-9">
+											<select class="form-control" id="payment_breakup" name="payment_breakup">
+												<option value="">Select</option>
+												<option value="1">In Full</option>
+												<option value="2">Installments</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group row enter-brakup" style="display:none;">
+										<label for="enter_breakup" class="col-sm-2 text-right control-label col-form-label">1st Installment %</label>
+										<div class="col-sm-4">
+											<input type="number" class="form-control" id="enter_breakup" name="enter_breakup" placeholder="1st Breakup %..">
+										</div>
+										<label for="enter_breakup2" class="col-sm-2 text-right control-label col-form-label">Last Installment %</label>
+										<div class="col-sm-4">
+											<input type="number" class="form-control" id="enter_breakup2" name="enter_breakup2" placeholder="Last Breakup %.." readonly>
+										</div>
+									</div>
+
+									<div class="form-group row enter-brakup" style="<?php echo (!empty($proj_data) && $proj_data['payment_breakup'] == '2') ? ''  : 'display:none;'; ?>" >
+										<label for="first_installment_amt" class="col-sm-2 text-right control-label col-form-label">1st Installment Amount</label>
+										<div class="col-sm-4">
+											<input type="number" class="form-control" id="first_installment_amt" name="first_installment_amt" placeholder="0" readonly>
+										</div>
+										<label for="last_installment_amt" class="col-sm-2 text-right control-label col-form-label">Last Installment Amount</label>
+										<div class="col-sm-4">
+											<input type="number" class="form-control" id="last_installment_amt" name="last_installment_amt" placeholder="0" readonly>
 										</div>
 									</div>
 
