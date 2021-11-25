@@ -146,7 +146,7 @@ class Auth_model extends MY_Model
 	public function getCustomerProjects($param = null, $many = FALSE, $order = 'DESC', $order_by = 'customers_it_projects.id')
 	{
 
-		$this->db->select('customers_it_projects.*, customers.first_name, customers.last_name, customers.email, customers.phone, it_projects.proj_title, it_projects.proj_amount AS proj_amount');
+		$this->db->select('customers_it_projects.*, customers.first_name, customers.last_name, customers.email, customers.phone, it_projects.proj_title, it_projects.proj_amount AS proj_amount, it_projects.proj_duration AS proj_duration');
 		$this->db->join('customers', 'customers.customer_id = customers_it_projects.customer_id', 'left');
 		$this->db->join('it_projects', 'it_projects.proj_id = customers_it_projects.proj_id', 'left');
 
@@ -686,10 +686,12 @@ class Auth_model extends MY_Model
 				customers.branch_name,
 				customers.ac_no,
 				customers.ifsc,
-				customers.ac_name
+				customers.ac_name,
+				it_projects.proj_title
 				  ');
 	
 			$this->db->join('customers', 'customers.customer_id = it_projects_payout.customer_id', 'left');
+			$this->db->join('it_projects', 'it_projects.proj_id = it_projects_payout.proj_id', 'left');
 	
 			if ($param != null) {
 				$this->db->where($param);

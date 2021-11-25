@@ -419,32 +419,28 @@ $(document).ready(function () {
 
     });
 
-    $(document).on('keyup', '#customer_id', function () {
+    $(document).on('change', '#customer_id', function () {
         var customer_id = $('#customer_id').val();
+        $('#proj_id').html('<option value="">Select</option>');
+        
         if (customer_id != '') {
             $.ajax({
                 type: "POST",
-                url: BASE_URL + 'duplicate_check_project',
+                url: BASE_URL + 'get-it-project-by-user',
                 data: {
                     customer_id: customer_id
                 },
 
                 success: function (d) {
-                    if (d.if_exists == 1) {
-                        $('#chk_title').show();
-                        $('#chk_title').html('<i class="icofont-close-squared-alt"></i> Title already exists..!!');
-                        $("#chk_title").css("color", "red");
-                        $('.proj_btn_submit').attr("disabled", true);
+                    if (d.status == 1) {
+                        $('#proj_id').html(d.itproj_data);
                     }else {
-                        $('#chk_title').show();
-                        $('#chk_title').html('<i class="icofont-tick-boxed"></i> Title available.');
-                        $("#chk_title").css("color", "green");
-                        $('.proj_btn_submit').attr("disabled", false);
+                        $('#proj_id').html('<option value="">Select</option>');
                     }
                 }
             });
         } else {
-            //$('#chk_title').hide();
+            // $('#proj_id').html('<option value="">Select</option>');
         }
 
     });

@@ -509,6 +509,7 @@ class ITProjects extends CI_Controller
                         'amount'  => $value->amount,
                         'user_email'  => $value->email,
                         'user_phone'  => $value->phone,
+                        'proj_title'  => $value->proj_title
                     );
                 }
 
@@ -566,7 +567,7 @@ class ITProjects extends CI_Controller
                 $this->form_validation->set_rules('customer_id', 'Customer', 'trim|required|xss_clean|htmlentities');
                 $this->form_validation->set_rules('amount', 'Amount', 'trim|required|numeric|xss_clean|htmlentities');
                 $this->form_validation->set_rules('proj_id', 'IT Project', 'trim|required|numeric|xss_clean|htmlentities');
-                // $this->form_validation->set_rules('remarks', 'Remarks', 'trim|required|xss_clean|htmlentities');
+                $this->form_validation->set_rules('remarks', 'Remarks', 'trim|required|xss_clean|htmlentities');
 
                 if ($this->form_validation->run() == FALSE) {
                     $this->form_validation->set_error_delimiters('', '');
@@ -605,11 +606,77 @@ class ITProjects extends CI_Controller
                                     $addamt = ($custData->wallet_amount + $amount);
                                     $upd_user = $this->am->updateCustomer(array('wallet_amount'  => $addamt), array('customer_id'  => $customer_id));
 
-                                    $return['added'] = 'success';
-                                    $return['msg'] = 'Payout added successfully!';
+                                    if($upd_user){
+                                        //send notification starts
+                                        $userDetails  =   $this->am->getCustomerData(array('customer_id' => $customer_id));
+
+                                        // print_obj($userDetails);die;
+                                        if (!empty($userDetails) && $userDetails->fcm_token != '') {
+                                            $fcm = $userDetails->fcm_token;
+                                            $name = $userDetails->first_name . ' ' . $userDetails->last_name;
+                                            //$fcm = 'cNf2---6Vs9';
+                                            $icon = NOTIFICATION_ICON;
+                                            $notification_title = 'Payout Received!';
+                                            $notification_body = 'Congrats! You have a new payout in your wallet of Rs. ' . $amount . '.';
+                                            $click_action = CLICK_ACTION;
+
+                                            $data = array(
+                                                "to" => $fcm,
+                                                "notification" => array(
+                                                    "title" => $notification_title,
+                                                    "body" => $notification_body,
+                                                    "icon" => $icon,
+                                                    "click_action" => $click_action
+                                                )
+                                            );
+                                            $data_string = json_encode($data);
+
+                                            //echo "The Json Data : " . $data_string;
+
+                                            $headers = array(
+                                                'Authorization: key=' . API_ACCESS_KEY,
+                                                'Content-Type: application/json'
+                                            );
+
+                                            $ch = curl_init();
+
+                                            curl_setopt($ch, CURLOPT_URL, FCM_URL);
+                                            curl_setopt($ch, CURLOPT_POST, true);
+                                            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+
+                                            $result = curl_exec($ch);
+
+                                            curl_close($ch);
+
+                                            $result_ar = json_decode($result);
+                                            // print_obj($result_ar);die;
+                                            if (!empty($result_ar) && $result_ar->success == 1) {
+                                                $logData = array(
+                                                    'customer_id' => $customer_id,
+                                                    "notification_title" => $notification_title,
+                                                    "notification_body" => $notification_body,
+                                                    "notification_event" => 'buy_inv_plan',
+                                                    "dtime" => dtime
+                                                );
+
+                                                $addLog = $this->am->addNotificationLog($logData);
+                                            }
+                                        }
+                                        //send notification ends
+
+                                        $return['added'] = 'success';
+                                        $return['msg'] = 'Payout added successfully!';
+                                    }else{
+                                        $return['added'] = 'failure';
+                                        $return['msg'] = 'Payout not added due to some unexpected error!';
+                                    }
+
+                                    
                         } else {
-                                    $return['added'] = 'failure';
-                                    $return['msg'] = 'Something went wrong!';
+                                $return['added'] = 'failure';
+                                $return['msg'] = 'Something went wrong!';
                         }
                     }else{
                         $return['added'] = 'month_paid';
@@ -622,6 +689,46 @@ class ITProjects extends CI_Controller
                         $return['msg'] = 'Customer does not exist!';
                     }
 
+                }
+
+                header('Content-Type: application/json');
+                echo json_encode($return);
+            } else {
+                redirect(base_url());
+            }
+        } else {
+            redirect(base_url());
+        }
+    }
+
+    public function onGetITProjectByUser()
+    {
+        if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1 && $this->session->userdata('usergroup') == 1) {
+            if ($this->input->is_ajax_request() && $this->input->server('REQUEST_METHOD') == 'POST') {
+
+                $customer_id = decode_url(xss_clean($this->input->post('customer_id')));
+                $projData = $this->am->getCustomerProjects(array('customers_it_projects.customer_id'  => $customer_id), TRUE);
+                $options = '<option value="">Select</option>';
+
+                // print_obj($projData);
+
+                if (!empty($projData)) {
+                 
+                    foreach ($projData as $key => $value) {
+                        $proj_buy_date = $value->added_dtime;
+                        $proj_duration = $value->proj_duration;
+                        $endDate = $value->end_date;
+
+                        $options .= '<option value="' . $value->proj_id . '">' . $value->proj_title . ' [Start Date: ' . $proj_buy_date .' - End Date: ' . $endDate .']</option>';
+                    }
+
+                    // print_obj($options);die;
+                    $return['itproj_data'] = $options;
+
+                    $return['status'] = '1';
+                } else {
+                    $return['itproj_data'] = [];
+                    $return['status'] = '0';
                 }
 
                 header('Content-Type: application/json');

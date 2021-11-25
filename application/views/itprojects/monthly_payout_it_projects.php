@@ -65,6 +65,7 @@
 												<th>Customer Name</th>
 												<th>Email</th>
 												<th>Phone</th>
+												<th>IT Project</th>
 												<th>Paid Amount</th>
 
 											</tr>
@@ -82,6 +83,7 @@
 														<td><?php echo $val['user_fullname']; ?></td>
 														<td><?php echo $val['user_email']; ?></td>
 														<td><?php echo $val['user_phone']; ?></td>
+														<td><?php echo $val['proj_title']; ?></td>
 														<td><?php echo $val['amount']; ?></td>
 													</tr>
 												<?php

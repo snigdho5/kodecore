@@ -1632,12 +1632,27 @@ class Api extends CI_Controller
                                 'customer_id' => $customer_id,
                                 'proj_id' => $proj_id
                             );
-                            $checkCustomerProject = $this->am->getCustomerProjectData($paramcheck);
+                            
+                            $getITProject = $this->am->getProjectData(array('proj_id' => $proj_id));
+                            if(!empty($getITProject)){
+                                $proj_buy_date = dtime;
+                                $proj_duration = $getITProject->proj_duration;
+    
+                                $endDate = date('Y-m-d H:i:s', strtotime("$proj_buy_date +$proj_duration Month"));
+                            }else{
+                                $proj_duration = 0;
+                                $endDate = '';
+                            }
+                            
+                        // echo $proj_buy_date . '<>' .$endDate;die;
 
+                        $checkCustomerProject = $this->am->getCustomerProjectData($paramcheck);
                             // if (empty($checkCustomerProject)) {
                                 $param = array(
                                     'customer_id' => $customer_id,
                                     'proj_id' => $proj_id,
+                                    'duration' => $proj_duration,
+                                    'end_date' => $endDate,
                                     //'project_amount' => $project_amount,
                                     'received_amount' => $grand_total,
                                     'gst_per' => $gst_per,
