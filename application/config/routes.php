@@ -50,6 +50,8 @@ $route['delproject'] = 'ITProjects/onDeleteProject';
 $route['applied-it-projects/(:any)'] = 'ITProjects/onGetAppliedProject/$1';
 
 $route['monthly-payout-it-projects'] = 'ITProjects/onGetPayoutITProject';
+$route['new-monthly-payout-it-project'] = 'ITProjects/onGetNewPayoutITProject';
+$route['givemonthlypayout'] = 'ITProjects/onSetNewPayoutITProject';
 
 //investment plans management
 $route['investment-plans'] = 'InvestmentPlans/index';

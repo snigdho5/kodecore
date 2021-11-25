@@ -654,4 +654,80 @@ class Auth_model extends MY_Model
 		}
 	}
 	
+		//payout
+		public function addPayout($data)
+		{
+			$this->table = 'it_projects_payout';
+			return $this->store($data);
+		}
+		public function getITProjectPayoutData($param = null, $many = FALSE, $order_by = 'payout_id', $order = 'DESC')
+		{
+			$this->table = 'it_projects_payout';
+			if ($param != null && $many == FALSE) {
+				return $this->get_one($param);
+			} else if ($param != null && $many == TRUE) {
+				return $this->get_many($param, $order_by, $order, FALSE);
+			} else {
+				return $this->get_many(null, $order_by, $order, FALSE);
+			}
+		}
+
+		public function getITProjectPayoutUserData($param = null, $many = FALSE, $order = 'DESC', $order_by = 'it_projects_payout.payout_id')
+		{
+	
+			$this->db->select('
+			it_projects_payout.*,
+				customers.first_name,
+				customers.last_name,
+				customers.email,
+				customers.phone,
+				customers.wallet_amount,
+				customers.bank_name,
+				customers.branch_name,
+				customers.ac_no,
+				customers.ifsc,
+				customers.ac_name
+				  ');
+	
+			$this->db->join('customers', 'customers.customer_id = it_projects_payout.customer_id', 'left');
+	
+			if ($param != null) {
+				$this->db->where($param);
+			}
+	
+			$this->db->order_by($order_by, $order);
+	
+			$query = $this->db->get('it_projects_payout');
+			// echo $this->db->last_query();die;
+	
+			if ($many != TRUE) {
+				return $query->row();
+			} else {
+				return $query->result();
+			}
+		}
+
+		public function getITProjectPayoutMonthData($customer_id = null, $proj_id = null, $many = FALSE, $order = 'DESC', $order_by = 'payout_id')
+		{
+	
+			$this->db->select('
+			it_projects_payout.*
+				  ');
+	
+			if ($customer_id != null) {
+				$st = 'customer_id = ' . $customer_id . ' AND proj_id = ' . $proj_id . ' AND month(added_dtime) = month(UTC_TIMESTAMP())';
+				$this->db->where($st, null, false);
+			}
+	
+			$this->db->order_by($order_by, $order);
+	
+			$query = $this->db->get('it_projects_payout');
+			// echo $this->db->last_query();die;
+	
+			if ($many != TRUE) {
+				return $query->row();
+			} else {
+				return $query->result();
+			}
+		}
 }

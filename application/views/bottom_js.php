@@ -16,6 +16,8 @@
 <script src="<?php echo base_url().'common/dist/js/custom.min.js';?>"></script>
 <script src="<?php echo base_url().'common/node_modules/sweetalert2/dist/sweetalert2.all.min.js';?>"></script>
 <script src="<?php echo base_url().'common/ckeditor/ckeditor.js';?>"></script>
+<script src="<?php echo base_url() . 'common/assets/libs/select2/dist/js/select2.full.min.js'; ?>"></script>
+<script src="<?php echo base_url() . 'common/assets/libs/select2/dist/js/select2.min.js'; ?>"></script>
 <script type="text/javascript">
     var BASE_URL = "<?php echo base_url();?>";
 

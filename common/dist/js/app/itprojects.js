@@ -360,5 +360,94 @@ $(document).ready(function () {
         $('#last_installment_amt').val('');
     });
 
+    $("#create_payout_form").submit(function (e) {
+
+        e.preventDefault();
+        
+            $.ajax({
+                type: 'POST',
+                url: BASE_URL + 'givemonthlypayout',
+                cache: false,
+                data: $('#create_payout_form').serialize(),
+                beforeSend: function () {
+                    $('#payout_btn_submit').html('Creating..').prop('disabled', true);
+                },
+                success: function (d) {
+                    if (d.added == "rule_error") {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: d.errors,
+                            confirmButtonText: 'Close',
+                            confirmButtonColor: '#d33',
+                            allowOutsideClick: false,
+                        });
+                        $('#payout_btn_submit').html('Submit').prop('disabled', false);
+
+                    } else if (d.added == 'success') {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: d.msg,
+                            confirmButtonText: 'Close',
+                            confirmButtonColor: '#d33',
+                            allowOutsideClick: false,
+                        });
+
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 100);
+
+                    }  else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: d.msg,
+                            confirmButtonText: 'Close',
+                            confirmButtonColor: '#d33',
+                            allowOutsideClick: false,
+                        });
+                        $('#payout_btn_submit').html('Submit').prop('disabled', false);
+                    }
+                }
+            });
+       
+
+       
+
+    });
+
+    $(document).on('keyup', '#customer_id', function () {
+        var customer_id = $('#customer_id').val();
+        if (customer_id != '') {
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + 'duplicate_check_project',
+                data: {
+                    customer_id: customer_id
+                },
+
+                success: function (d) {
+                    if (d.if_exists == 1) {
+                        $('#chk_title').show();
+                        $('#chk_title').html('<i class="icofont-close-squared-alt"></i> Title already exists..!!');
+                        $("#chk_title").css("color", "red");
+                        $('.proj_btn_submit').attr("disabled", true);
+                    }else {
+                        $('#chk_title').show();
+                        $('#chk_title').html('<i class="icofont-tick-boxed"></i> Title available.');
+                        $("#chk_title").css("color", "green");
+                        $('.proj_btn_submit').attr("disabled", false);
+                    }
+                }
+            });
+        } else {
+            //$('#chk_title').hide();
+        }
+
+    });
+
 
 });

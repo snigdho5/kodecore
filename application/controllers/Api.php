@@ -1569,7 +1569,7 @@ class Api extends CI_Controller
                     if (!empty($decodedParam)) {
 
                         //validation starts
-                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->it_proj_id) && $decodedParam->it_proj_id != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '' && isset($decodedParam->payment_breakup) && $decodedParam->payment_breakup != '') {
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->it_proj_id) && $decodedParam->it_proj_id != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && $decodedParam->tds_per != '' && isset($decodedParam->royalty_per) && $decodedParam->royalty_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '' && isset($decodedParam->payment_breakup) && $decodedParam->payment_breakup != '') {
 
                             $if_not_blank = 1; //not blank
                             $customer_id = xss_clean($decodedParam->user_id);
@@ -1579,6 +1579,8 @@ class Api extends CI_Controller
                             $gst_rate = xss_clean($decodedParam->gst_rate);
                             $tds_per = xss_clean($decodedParam->tds_per);
                             $tds_rate = xss_clean($decodedParam->tds_rate);
+                            $royalty_per = xss_clean($decodedParam->royalty_per);
+                            $royalty_rate = xss_clean($decodedParam->royalty_rate);
                             $grand_total = xss_clean($decodedParam->grand_total);
                             $payment_status = xss_clean($decodedParam->payment_status);
                             $payment_response = xss_clean($decodedParam->payment_id);
@@ -1642,6 +1644,8 @@ class Api extends CI_Controller
                                     'gst_rate' => $gst_rate,
                                     'tds_per' => $tds_per,
                                     'tds_rate' => $tds_rate,
+                                    'royalty_per' => $royalty_per,
+                                    'royalty_rate' => $royalty_rate,
                                     'subtotal' => $received_amount,
                                     'payment_status' => $payment_status,
                                     'payment_response' => $payment_response,
@@ -1679,7 +1683,6 @@ class Api extends CI_Controller
                                                     $notification_title = 'You have successfully paid your last installment for an IT project';
                                                     $notification_body = 'Thanks for buying an IT project. Payment of last installment was successful';
                                                 }
-                                                
                                             }else{
                                                 $notification_title = 'You bought an IT project';
                                                 $notification_body = 'Thanks for buying an IT project. Payment was successful';
@@ -1903,16 +1906,45 @@ class Api extends CI_Controller
                                         $gst_rate = $value->gst_rate;
                                         $tds_per = $value->tds_per;
                                         $tds_rate = $value->tds_rate;
+                                        $royalty_per = $value->royalty_per;
+                                        $royalty_rate = $value->royalty_rate;
                                         $received_amount = $value->received_amount;
                                         $dtime = $value->added_dtime;
                                         $appl_status = ($value->application_status = 0)?'Applied':'Approved';
                                         $pay_status = ($value->payment_status = 1)?'Paid':'Not Paid';
 
+                                        if($value->installment_serial == 1){
+                                            $ins_msg = '(First Installment)';
+
+                                            $installment_tr = '
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">Installment #:</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">'.$ins_msg.'</td>
+                                            </tr>';
+                                        }else if ($value->installment_serial == 2){
+                                            $ins_msg = '(Last Installment)';
+
+                                            $installment_tr = '
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">Installment #:</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">'.$ins_msg.'</td>
+                                            </tr>';
+                                        }else{
+                                            $ins_msg = '';
+                                            
+                                            $installment_tr = '
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">Installment / Full:</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">Full Payment</td>
+                                            </tr>';
+                                        }
+                                        
+
                                         $tcpdf->AddPage();
                                         
                                         $html = <<<EOD
                                         <center>
-                                        <table width="595" border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px; border-bottom: 0;">
+                                        <table border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px;">
                                         <tbody>
                                             <tr>
                                             <td style="text-align: center; height: 30px; font-size: 25px; font-weight: bold;" colspan="2">Receipt</td>
@@ -1944,12 +1976,6 @@ class Api extends CI_Controller
                                             </tr>
 
                                             <tr>
-                                            <td style="width:20%; height: 20px;">Project Amount:</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$project_amount</td>
-                                            </tr>
-
-
-                                            <tr>
                                             <td style="width:20%; height: 20px;">Payment Status:</td>
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$pay_status</td>
                                             </tr>
@@ -1959,29 +1985,32 @@ class Api extends CI_Controller
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$appl_status</td>
                                             </tr>
 
+                                            $installment_tr
+
+                                            
                                             <tr>
-                                            <td style="width:20%; height: 20px;">Actual Amount:</td>
+                                            <td style="width:20%; height: 20px;">Project Amount:</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$project_amount</td>
+                                            </tr>
+
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">Base Amount:</td>
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$subtotal</td>
                                             </tr>
    
                                             <tr>
-                                            <td style="width:20%; height: 20px;">GST Percentage (%):</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
+                                            <td style="width:20%; height: 20px;">GST ($gst_per %):</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $gst_rate</td>
+                                            </tr>
+   
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">TDS ($tds_per %):</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $tds_rate</td>
                                             </tr>
 
                                             <tr>
-                                            <td style="width:20%; height: 20px;">GST Rate:</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
-                                            </tr>
-   
-                                            <tr>
-                                            <td style="width:20%; height: 20px;">TDS Percentage (%):</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_per</td>
-                                            </tr>
-   
-                                            <tr>
-                                            <td style="width:20%; height: 20px;">TDS Rate:</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_rate</td>
+                                            <td style="width:20%; height: 20px;">Royalty ($royalty_per %):</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">- $royalty_rate</td>
                                             </tr>
 
                                             <tr>
@@ -1997,7 +2026,7 @@ class Api extends CI_Controller
                                         $tcpdf->writeHTML($html);
 
 
-                                        $filename = 'kc_inv_'.$key.'_'.date("YmdHis", time()) .'.pdf';
+                                        $filename = 'IT_Project_'.$key.'_'.date("YmdHis", time()) .'.pdf';
                                         $filepath = base_url().'uploads/invoices/'.$filename;
 
                                         $fullname = ABS_PATH . $filename;
@@ -2005,6 +2034,7 @@ class Api extends CI_Controller
                                         $tcpdf->Output($fullname, 'F');
 
                                         // echo APPPATH.'uploads/invoices/'.$filename; die;
+
 
                                         $resp[] = array(
                                             'user_id' => $value->customer_id,
@@ -2014,7 +2044,7 @@ class Api extends CI_Controller
                                             'user_email'  => $email,
                                             'user_phone'  => $phone,
                                             'project_amount' => $project_amount,
-                                            'received_amount' => $received_amount,
+                                            'received_amount' => $received_amount . $ins_msg,
                                             'application_status' => $value->application_status,
                                             'payment_status' => $value->payment_status,
                                             'installment_serial' => $value->installment_serial,
@@ -2478,7 +2508,7 @@ class Api extends CI_Controller
                                          
                                          $html = <<<EOD
                                          <center>
-                                         <table width="595" border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px; border-bottom: 0;">
+                                         <table border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px;">
                                          <tbody>
                                              <tr>
                                              <td style="text-align: center; height: 30px; font-size: 25px; font-weight: bold;" colspan="2">Receipt</td>
@@ -2525,32 +2555,21 @@ class Api extends CI_Controller
                                              <td style="width:20%; height: 20px;">Actual Amount:</td>
                                              <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$subtotal</td>
                                              </tr>
-    
-                                             <tr>
-                                             <td style="width:20%; height: 20px;">GST Percentage (%):</td>
-                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
-                                             </tr>
 
-                                             
-                                             <tr>
-                                             <td style="width:20%; height: 20px;">GST Rate:</td>
-                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
-                                             </tr>
-    
-                                             <tr>
-                                             <td style="width:20%; height: 20px;">TDS Percentage (%):</td>
-                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_per</td>
-                                             </tr>
-    
-                                             <tr>
-                                             <td style="width:20%; height: 20px;">TDS Rate:</td>
-                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_rate</td>
-                                             </tr>
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">GST ($gst_per %):</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $gst_rate</td>
+                                            </tr>
+   
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">TDS ($tds_per %):</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $tds_rate</td>
+                                            </tr>
 
-                                             <tr>
-                                             <td style="width:20%; height: 20px;">Received Amount:</td>
-                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$received_amount</td>
-                                             </tr>
+                                            <tr>
+                                            <td style="width:20%; height: 20px;">Received Amount:</td>
+                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$received_amount</td>
+                                            </tr>
 
                                          </tbody>
                                          </table>
@@ -3678,7 +3697,7 @@ class Api extends CI_Controller
                                      
                                      $html = <<<EOD
                                      <center>
-                                     <table width="595" border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px; border-bottom: 0;">
+                                     <table border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px;">
                                      <tbody>
                                          <tr>
                                          <td style="text-align: center; height: 30px; font-size: 25px; font-weight: bold;" colspan="2">Receipt</td>
@@ -3724,7 +3743,6 @@ class Api extends CI_Controller
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$pay_status</td>
                                          </tr>
 
-
                                          <tr>
                                          <td style="width:20%; height: 20px;">Status:</td>
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$appl_status</td>
@@ -3736,31 +3754,19 @@ class Api extends CI_Controller
                                          </tr>
 
                                          <tr>
-                                         <td style="width:20%; height: 20px;">GST Percentage (%):</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
+                                         <td style="width:20%; height: 20px;">GST ($gst_per %):</td>
+                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $gst_rate</td>
                                          </tr>
-
-                                          
+   
                                          <tr>
-                                         <td style="width:20%; height: 20px;">GST Rate:</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
-                                         </tr>
-
-                                         <tr>
-                                         <td style="width:20%; height: 20px;">TDS Percentage (%):</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_per</td>
-                                         </tr>
-
-                                         <tr>
-                                         <td style="width:20%; height: 20px;">TDS Rate:</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_rate</td>
+                                         <td style="width:20%; height: 20px;">TDS ($tds_per %):</td>
+                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $tds_rate</td>
                                          </tr>
 
                                          <tr>
                                          <td style="width:20%; height: 20px;">Amount:</td>
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$received_amount</td>
                                          </tr>
-
 
                                      </tbody>
                                      </table>
@@ -3771,7 +3777,7 @@ class Api extends CI_Controller
                                      $tcpdf->writeHTML($html);
 
 
-                                     $filename = 'crypto_inv_'.$key.'_'.date("YmdHis", time()) .'.pdf';
+                                     $filename = 'Crypto_inv_'.$key.'_'.date("YmdHis", time()) .'.pdf';
                                      $filepath = base_url().'uploads/invoices/'.$filename;
 
                                      $fullname = ABS_PATH . $filename;
@@ -3845,7 +3851,7 @@ class Api extends CI_Controller
                                      
                                      $html = <<<EOD
                                      <center>
-                                     <table width="595" border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px; border-bottom: 0;">
+                                     <table border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px;">
                                      <tbody>
                                          <tr>
                                          <td style="text-align: center; height: 30px; font-size: 25px; font-weight: bold;" colspan="2">Receipt</td>
@@ -3881,7 +3887,6 @@ class Api extends CI_Controller
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$transaction_type</td>
                                          </tr>
 
-
                                          <tr>
                                          <td style="width:20%; height: 20px;">Quantity:</td>
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$quantity</td>
@@ -3892,12 +3897,10 @@ class Api extends CI_Controller
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$pay_status</td>
                                          </tr>
 
-
                                          <tr>
                                          <td style="width:20%; height: 20px;">Status:</td>
                                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$appl_status</td>
                                          </tr>
-
                                          
                                          <tr>
                                          <td style="width:20%; height: 20px;">Actual Amount:</td>
@@ -3905,24 +3908,13 @@ class Api extends CI_Controller
                                          </tr>
 
                                          <tr>
-                                         <td style="width:20%; height: 20px;">GST Percentage (%):</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_per</td>
+                                         <td style="width:20%; height: 20px;">GST ($gst_per %):</td>
+                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $gst_rate</td>
                                          </tr>
-
-                                          
+   
                                          <tr>
-                                         <td style="width:20%; height: 20px;">GST Rate:</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$gst_rate</td>
-                                         </tr>
-
-                                         <tr>
-                                         <td style="width:20%; height: 20px;">TDS Percentage (%):</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_per</td>
-                                         </tr>
-
-                                         <tr>
-                                         <td style="width:20%; height: 20px;">TDS Rate:</td>
-                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$tds_rate</td>
+                                         <td style="width:20%; height: 20px;">TDS ($tds_per %):</td>
+                                         <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $tds_rate</td>
                                          </tr>
 
                                          <tr>
@@ -3933,13 +3925,12 @@ class Api extends CI_Controller
                                      </tbody>
                                      </table>
 
-                                     
                                      </center>
                                      EOD;
                                      $tcpdf->writeHTML($html);
 
 
-                                     $filename = 'crypto_inv_'.$key.'_'.date("YmdHis", time()) .'.pdf';
+                                     $filename = 'Crypto_inv_'.$key.'_'.date("YmdHis", time()) .'.pdf';
                                      $filepath = base_url().'uploads/invoices/'.$filename;
 
                                      $fullname = ABS_PATH . $filename;

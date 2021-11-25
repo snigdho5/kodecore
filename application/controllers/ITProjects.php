@@ -302,6 +302,166 @@ class ITProjects extends CI_Controller
             $projectsdata = $this->am->getCustomerProjects(array('customers_it_projects.proj_id'=> $proj_id), TRUE);
             if (!empty($projectsdata)) {
                 foreach ($projectsdata as $key => $value) {
+
+                      //  TCPDF Integration
+                      $tcpdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+                      // Set Title
+                      $tcpdf->SetTitle('Kodecore - IT Project Invoice');
+                      // Set Header Margin
+                      $tcpdf->SetHeaderMargin(30);
+                      // Set Top Margin
+                      $tcpdf->SetTopMargin(20);
+                      // set Footer Margin
+                      $tcpdf->setFooterMargin(20);
+                      // Set Auto Page Break
+                      $tcpdf->SetAutoPageBreak(true);
+                      // Set Author
+                      $tcpdf->SetAuthor('Snigdho');
+                      // Set Display Mode
+                      $tcpdf->SetDisplayMode('real', 'default');
+                      // Set Write text
+                      // $pdf->Write(5, 'TCPDF Integration');
+                      // Set Output and file name
+
+                      $proj_title = $value->proj_title;
+                      $user_name = $value->first_name . ' ' . $value->last_name;
+                      $email = $value->email;
+                      $phone = $value->phone;
+                      $project_amount = $value->proj_amount;
+                      $subtotal = $value->subtotal;
+                      $gst_per = $value->gst_per;
+                      $gst_rate = $value->gst_rate;
+                      $tds_per = $value->tds_per;
+                      $tds_rate = $value->tds_rate;
+                      $royalty_per = $value->royalty_per;
+                      $royalty_rate = $value->royalty_rate;
+                      $received_amount = $value->received_amount;
+                      $dtime = $value->added_dtime;
+                      $appl_status = ($value->application_status = 0)?'Applied':'Approved';
+                      $pay_status = ($value->payment_status = 1)?'Paid':'Not Paid';
+
+                      if($value->installment_serial == 1){
+                          $ins_msg = '(First Installment)';
+
+                          $installment_tr = '
+                          <tr>
+                          <td style="width:20%; height: 20px;">Installment #:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">'.$ins_msg.'</td>
+                          </tr>';
+                      }else if ($value->installment_serial == 2){
+                          $ins_msg = '(Last Installment)';
+
+                          $installment_tr = '
+                          <tr>
+                          <td style="width:20%; height: 20px;">Installment #:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">'.$ins_msg.'</td>
+                          </tr>';
+                      }else{
+                          $ins_msg = '';
+                          
+                          $installment_tr = '
+                          <tr>
+                          <td style="width:20%; height: 20px;">Installment / Full:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">Full Payment</td>
+                          </tr>';
+                      }
+                      
+
+                      $tcpdf->AddPage();
+                      
+                      $html = <<<EOD
+                      <center>
+                      <table border="0" cellpadding="5" style="border: 1px solid #ccc; padding: 3%; font-family: arial; font-size: 14px;">
+                      <tbody>
+                          <tr>
+                          <td style="text-align: center; height: 30px; font-size: 25px; font-weight: bold;" colspan="2">Receipt</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">IT Project:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$proj_title</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Date:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$dtime</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Name:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$user_name</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Email:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$email</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Phone:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$phone</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Payment Status:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$pay_status</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Status:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$appl_status</td>
+                          </tr>
+
+                          $installment_tr
+
+                          
+                          <tr>
+                          <td style="width:20%; height: 20px;">Project Amount:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$project_amount</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Base Amount:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$subtotal</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">GST ($gst_per %):</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $gst_rate</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">TDS ($tds_per %):</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $tds_rate</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Royalty ($royalty_per %):</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">- $royalty_rate</td>
+                          </tr>
+
+                          <tr>
+                          <td style="width:20%; height: 20px;">Received Amount:</td>
+                          <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$received_amount</td>
+                          </tr>
+                      </tbody>
+                      </table>
+
+                      
+                      </center>
+                      EOD;
+                      $tcpdf->writeHTML($html);
+
+
+                      $filename = 'IT_Project_'.$key.'_'.date("YmdHis", time()) .'.pdf';
+                      $filepath = base_url().'uploads/invoices/'.$filename;
+
+                      $fullname = ABS_PATH . $filename;
+                      
+                      $tcpdf->Output($fullname, 'F');
+
+                      // echo APPPATH.'uploads/invoices/'.$filename; die;
+
                     $this->data['applied_data'][] = array(
                         'row_id'  => $value->id,
                         'dtime'  => $value->added_dtime,
@@ -316,6 +476,7 @@ class ITProjects extends CI_Controller
                         'application_status'  => $value->application_status,
                         'payment_status'  => $value->payment_status,
                         'payment_mode'  => $value->payment_mode,
+                        'filepath'  => $filepath,
                         'added_dtime'  => $value->added_dtime
                     );
                 }
@@ -336,26 +497,138 @@ class ITProjects extends CI_Controller
     {
         if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1) {
             $this->data['page_title'] = 'IT Projects - Monthly Payout';
-            $projectsdata = $this->am->getProjectData(null, $many = TRUE);
-            if (!empty($projectsdata)) {
-                foreach ($projectsdata as $key => $value) {
-                    $this->data['proj_data'][] = array(
+            $payoutdata = $this->am->getITProjectPayoutUserData(null, $many = TRUE);
+            if (!empty($payoutdata)) {
+                foreach ($payoutdata as $key => $value) {
+                    $this->data['payout_data'][] = array(
                         'dtime'  => $value->added_dtime,
-                        'projid'  => $value->proj_id,
-                        'title'  => $value->proj_title,
-                        'description'  => $value->proj_description,
-                        'amount'  => $value->proj_amount,
-                        'duration'  => $value->proj_duration,
-                        'editeddtime'  => $value->edited_dtime
+                        'payoutid'  => $value->payout_id,
+                        'customer_id'  => $value->customer_id,
+                        'user_fullname'  => $value->first_name . ' ' . $value->last_name,
+                        'remarks'  => $value->remarks,
+                        'amount'  => $value->amount,
+                        'user_email'  => $value->email,
+                        'user_phone'  => $value->phone,
                     );
                 }
 
-                //print_obj($this->data['proj_data']);die;
+                //print_obj($this->data['payout_data']);die;
 
             } else {
-                $this->data['proj_data'] = '';
+                $this->data['payout_data'] = '';
             }
             $this->load->view('itprojects/monthly_payout_it_projects', $this->data, false);
+        } else {
+            redirect(base_url());
+        }
+    }
+
+    
+    
+    public function onGetNewPayoutITProject()
+    {
+        if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1) {
+            $this->data['page_title'] = 'IT Projects - New Monthly Payout';
+            $custdata = $this->am->getCustomerData(null, TRUE, 'first_name', 'ASC');
+			if (!empty($custdata)) {
+				foreach ($custdata as $key => $value) {
+					$this->data['cust_data'][] = array(
+						'dtime'  => $value->dtime,
+						'custid'  => encode_url($value->customer_id),
+						'username'  => $value->user_name,
+						'fullname'  => $value->first_name . ' ' . $value->last_name,
+						'phone'  => $value->phone,
+						'email'  => $value->email,
+						'walletactive'  => $value->is_wallet_active,
+						'walletamt'  => $value->wallet_amount,
+						'lastlogin'  => $value->last_login,
+						'lastloginip'  => $value->last_login_ip,
+						'lastupdated'  => $value->last_updated
+					);
+				}
+
+				//print_obj($this->data['cust_data']);die;
+
+			} else {
+				$this->data['cust_data'] = '';
+			}
+            $this->load->view('itprojects/new_monthly_payout_it_projects', $this->data, false);
+        } else {
+            redirect(base_url());
+        }
+    }
+
+    public function onSetNewPayoutITProject()
+    {
+        if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1) {
+            if ($this->input->is_ajax_request() && $this->input->server('REQUEST_METHOD') == 'POST') {
+
+                $this->form_validation->set_rules('customer_id', 'Customer', 'trim|required|xss_clean|htmlentities');
+                $this->form_validation->set_rules('amount', 'Amount', 'trim|required|numeric|xss_clean|htmlentities');
+                $this->form_validation->set_rules('proj_id', 'IT Project', 'trim|required|numeric|xss_clean|htmlentities');
+                // $this->form_validation->set_rules('remarks', 'Remarks', 'trim|required|xss_clean|htmlentities');
+
+                if ($this->form_validation->run() == FALSE) {
+                    $this->form_validation->set_error_delimiters('', '');
+                    $return['errors'] = validation_errors();
+                    $return['added'] = 'rule_error';
+                } else {
+
+                    $customer_id = xss_clean(decode_url($this->input->post('customer_id')));
+                    $remarks = xss_clean($this->input->post('remarks'));
+                    $amount = xss_clean($this->input->post('amount'));
+                    $proj_id = xss_clean($this->input->post('proj_id'));
+
+                    $chkdata = array('customer_id'  => $customer_id);
+                    $custData = $this->am->getCustomerData($chkdata, FALSE);
+    
+                    if (!empty($custData)) {
+
+                    $custPayoutMonth = $this->am->getITProjectPayoutMonthData($customer_id, $proj_id);
+
+                    // print_obj($custPayoutMonth);die;
+
+                    if(empty($custPayoutMonth)){
+                        $ins_userdata = array(
+                            'customer_id'  => $customer_id,
+                            'proj_id'  => $proj_id,
+                            'amount'  => $amount,
+                            'remarks'  => $remarks,
+                            'added_dtime'  => dtime,
+                            'added_by'  => $this->session->userdata('userid')
+                        );
+                            // print_obj($ins_userdata);die;
+                        $added = $this->am->addPayout($ins_userdata);
+        
+                        if ($added) {
+
+                                    $addamt = ($custData->wallet_amount + $amount);
+                                    $upd_user = $this->am->updateCustomer(array('wallet_amount'  => $addamt), array('customer_id'  => $customer_id));
+
+                                    $return['added'] = 'success';
+                                    $return['msg'] = 'Payout added successfully!';
+                        } else {
+                                    $return['added'] = 'failure';
+                                    $return['msg'] = 'Something went wrong!';
+                        }
+                    }else{
+                        $return['added'] = 'month_paid';
+                        $return['msg'] = 'Already paid to customer for this month on ' . $custPayoutMonth->added_dtime . ', Rs. ' . $custPayoutMonth->amount . '!';
+                    }
+    
+                    
+                } else {
+                        $return['added'] = 'already_exists';
+                        $return['msg'] = 'Customer does not exist!';
+                    }
+
+                }
+
+                header('Content-Type: application/json');
+                echo json_encode($return);
+            } else {
+                redirect(base_url());
+            }
         } else {
             redirect(base_url());
         }

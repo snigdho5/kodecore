@@ -55,34 +55,34 @@
 					<div class="col-12">
 						<div class="card">
 							<div class="card-body">
-							<h5 class="card-title"><?php echo $page_title; ?> <button type="button" class="btn badge badge-pill badge-success" onclick="location.href='<?php echo base_url() . 'add-it-project'; ?>'">Add <?Php echo $page_title; ?></button></h5>
+							<h5 class="card-title"><?php echo $page_title; ?> <button type="button" class="btn badge badge-pill badge-success" onclick="location.href='<?php echo base_url() . 'new-monthly-payout-it-project'; ?>'">Add <?php echo $page_title; ?></button></h5>
 								<div class="table-responsive">
 									<table id="zero_config" class="table table-striped table-bordered">
 										<thead>
 											<tr class="textcen">
 												<th>Sl</th>
 												<th>Created On</th>
-												<th>Project Title</th>
-												<th>User Name</th>
-												<th>User Email</th>
-												<th>User Phone</th>
+												<th>Customer Name</th>
+												<th>Email</th>
+												<th>Phone</th>
+												<th>Paid Amount</th>
 
 											</tr>
 										</thead>
 										<tbody class="textcen">
 											<?php
-											if (!empty($applied_data)) {
-												//print_obj($applied_data);
+											if (!empty($payout_data)) {
+												//print_obj($payout_data);
 												$sl = 1;
-												foreach ($applied_data as $key => $val) {
+												foreach ($payout_data as $key => $val) {
 											?>
 													<tr>
 														<td><?php echo $sl; ?></td>
 														<td><?php echo $val['dtime']; ?></td>
-														<td><?php echo $val['projtitle']; ?></td>
-														<td><?php echo $val['user_name']; ?></td>
+														<td><?php echo $val['user_fullname']; ?></td>
 														<td><?php echo $val['user_email']; ?></td>
 														<td><?php echo $val['user_phone']; ?></td>
+														<td><?php echo $val['amount']; ?></td>
 													</tr>
 												<?php
 													$sl++;

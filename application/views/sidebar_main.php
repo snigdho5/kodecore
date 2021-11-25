@@ -20,7 +20,7 @@ $page =  $this->uri->segment(1);
 
 						<li class="sidebar-item <?php echo ($page == 'add-investment-plan' || $page == 'edit-investment-plan' || $page == 'changeinvplan') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>investment-plans" class="sidebar-link <?php echo ($page == 'add-investment-plan' || $page == 'edit-investment-plan' || $page == 'changeinvplan') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> Investment Plans Management</span></a></li>
 
-						<li class="sidebar-item <?php echo ($page == 'update-cryptocurrency') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>view-cryptocurrency" class="sidebar-link <?php echo ($page == 'update-cryptocurrency') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> Cryptocurrency Management</span></a></li>
+						<li class="sidebar-item <?php echo ($page == 'update-cryptocurrency') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>view-cryptocurrency" class="sidebar-link <?php echo ($page == 'update-cryptocurrency') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> Kodecoin Management</span></a></li>
 
 						<li class="sidebar-item "><a href="<?php echo base_url(); ?>buy-cryptocurrency-transactions" class="sidebar-link "><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> Cryptocurrency Transactions - Buy</span></a></li>
 
@@ -41,9 +41,9 @@ $page =  $this->uri->segment(1);
 
 				
 				<li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Payout </span></a>
-					<ul aria-expanded="false" class="collapse  first-level <?php echo ($page == 'add-itproject-payout') ? 'in' : ''; ?>">
+					<ul aria-expanded="false" class="collapse  first-level <?php echo ($page == 'new-monthly-payout-it-project') ? 'in' : ''; ?>">
 
-						<li class="sidebar-item <?php echo ($page == 'add-itproject-payout') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>monthly-payout-it-projects" class="sidebar-link <?php echo ($page == 'add-itproject-payout') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> IT Projects Monthly Payout</span></a></li>
+						<li class="sidebar-item <?php echo ($page == 'new-monthly-payout-it-project') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>monthly-payout-it-projects" class="sidebar-link <?php echo ($page == 'new-monthly-payout-it-project') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> IT Projects Monthly Payout</span></a></li>
 					</ul>
 				</li>
 

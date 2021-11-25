@@ -66,6 +66,7 @@
 												<th>User Name</th>
 												<th>User Email</th>
 												<th>User Phone</th>
+												<th>Invoice</th>
 
 											</tr>
 										</thead>
@@ -83,6 +84,7 @@
 														<td><?php echo $val['user_name']; ?></td>
 														<td><?php echo $val['user_email']; ?></td>
 														<td><?php echo $val['user_phone']; ?></td>
+														<td><a href="<?php echo $val['filepath']; ?>" target="_blank"><i class="icofont-file-document"></i></a></td>
 													</tr>
 												<?php
 													$sl++;

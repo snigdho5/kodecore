@@ -63,6 +63,8 @@
 												<th>Sl</th>
 												<th>Created On</th>
 												<th>Name</th>
+												<th>Email</th>
+												<th>Phone</th>
 												<!-- <th>Username</th> -->
 												<th>Wallet Ballance</th>
 												<th>Last Login</th>
@@ -82,6 +84,8 @@
 														<td><?php echo $sl; ?></td>
 														<td><?php echo $val['dtime']; ?></td>
 														<td><?php echo $val['fullname']; ?></td>
+														<td><?php echo $val['email']; ?></td>
+														<td><?php echo $val['phone']; ?></td>
 														<!-- <td><?php echo $val['username']; ?></td> -->
 														<td><?php echo $val['walletamt']; ?></td>
 														<td><?php echo ($val['lastlogin'] != '') ? $val['lastlogin'] : 'Not logged in'; ?></td>

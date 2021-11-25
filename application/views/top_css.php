@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="<?php echo base_url().'common/icofont/icofont.min.css';?>">
 <link rel="stylesheet" href="<?php echo base_url().'common/dist/css/custom.css';?>">
 <link rel="stylesheet" href="<?php echo base_url().'common/node_modules/sweetalert2/dist/sweetalert2.min.css';?>"></link>
+<link rel="stylesheet" href="<?php echo base_url().'common/assets/libs/select2/dist/css/select2.min.css';?>"></link>
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
