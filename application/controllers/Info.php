@@ -24,7 +24,8 @@ class Info extends CI_Controller
                     'privacy' => $data->privacy,
                     'gst' => $data->gst,
                     'tds' => $data->tds,
-                    'royalty' => $data->royalty
+                    'royalty' => $data->royalty,
+                    'admin_charges' => $data->admin_charges
                 );
                 //print_obj($this->data['info_data']);die;
                 $this->load->view('info/vw_privacy_edit', $this->data, false);
@@ -49,6 +50,7 @@ class Info extends CI_Controller
             $gst = xss_clean($this->input->post('gst_rate'));
             $tds = xss_clean($this->input->post('tds_rate'));
             $royalty = xss_clean($this->input->post('royalty_rate'));
+            $admin_charges = xss_clean($this->input->post('admin_charges'));
 
 
             $upd_userdata = array(
@@ -57,6 +59,7 @@ class Info extends CI_Controller
                 'gst'  => $gst,
                 'tds'  => $tds,
                 'royalty'  => $royalty,
+                'admin_charges'  => $admin_charges,
                 'dtime'  => dtime,
                 'edited_by'  => $this->session->userdata('userid')
             );
@@ -79,6 +82,7 @@ class Info extends CI_Controller
                         'gst'  => $cryptoDataUpd->gst,
                         'tds'  => $cryptoDataUpd->tds,
                         'royalty'  => $cryptoDataUpd->royalty,
+                        'admin_charges'  => $cryptoDataUpd->admin_charges,
                         'editeddtime'  => $cryptoDataUpd->dtime
                     );
                 } else {

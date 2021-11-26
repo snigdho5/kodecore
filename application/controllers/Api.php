@@ -4428,4 +4428,100 @@ class Api extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($return);
     }
+
+
+    public function onGetPayoutData()
+    {
+        $jsonData = $this->input->post('oAuth_json');
+        $json_Param = $this->input->post('jsonParam');
+        //print_obj($this->input->post());
+
+        if (!empty($jsonData)) {
+            $decoded = json_decode($jsonData);
+            $decodedParam = json_decode($json_Param);
+            //print_obj($decodedParam);
+
+            if ($decoded != '' || $decoded != NULL) {
+                $sKey = $decoded->sKey;
+                $aKey = $decoded->aKey;
+                $out_message = array();
+
+                if ($sKey == secretKey && $aKey == accessKey) {
+
+                    if (!empty($decodedParam)) {
+
+                        //validation starts
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '') {
+
+                            $if_not_blank = 1; //not blank
+                            $customer_id = xss_clean($decodedParam->user_id);
+                        } else {
+                            $if_not_blank = 0;
+                            $out_message += array('valid_fields' => 'Missing Required Fields!!');
+                        }
+                        //validation ends
+
+                        //check if valid
+                        if ($if_not_blank == 1) {
+
+                            $paramUp = array('it_projects_payout.customer_id' => $customer_id);
+
+                            $payoutdata = $this->am->getITProjectPayoutUserData($paramUp, TRUE);
+
+                            if (!empty($payoutdata)) {
+                                    foreach ($payoutdata as $key => $value) {
+                                        $resp[] = array(
+                                            'dtime'  => $value->added_dtime,
+                                            'payoutid'  => $value->payout_id,
+                                            'customer_id'  => $value->customer_id,
+                                            'user_fullname'  => $value->first_name . ' ' . $value->last_name,
+                                            'remarks'  => $value->remarks,
+                                            'amount'  => $value->subtotal_amt,
+                                            'user_email'  => $value->email,
+                                            'user_phone'  => $value->phone,
+                                            'proj_title'  => $value->proj_title,
+                                            'filepath' => 'https://kodecore.com/app/uploads/invoices/IT_Project_0_20211126065459.pdf'
+                                        );
+                                    }
+
+                                    //print_obj($resp);die;
+
+
+                                $return['respData'] = $resp;
+                                $return['success'] = 1;
+                                $return['message'] = 'Payout found!';
+                            } else {
+                                $return['respData'] = [];
+                                $return['success'] = 0;
+                                $return['message'] = 'Payout not found!';
+                            }
+
+
+                        } else {
+                            $return['respData'] = [];
+                            $return['success'] = 0;
+                            $return['message'] = $out_message;
+                        }
+                    } else {
+                        $return['respData'] = [];
+                        $return['success'] = 0;
+                        $return['message'] = 'JSON data payload is empty!';
+                    }
+                } else {
+                    $return['success'] = '0';
+                    $return['message'] = 'Security credentials mismatch!';
+                }
+            } else {
+                $return['success'] = '0';
+                $return['message'] = 'JSON data error';
+            }
+        } else {
+            $return['success'] = '0';
+            $return['message'] = 'JSON Auth payload is empty!';
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($return);
+    }
+    
 }

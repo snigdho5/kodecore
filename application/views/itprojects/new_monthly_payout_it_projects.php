@@ -99,14 +99,14 @@
 									<div class="form-group row">
 										<label for="amount" class="col-sm-3 text-right control-label col-form-label">Amount</label>
 										<div class="col-sm-9">
-											<input type="number" class="form-control" id="amount" name="amount" placeholder="Amount..">
+											<input type="text" class="form-control number" id="amount" name="amount" placeholder="Amount..">
 										</div>
 									</div>
 									
 									<div class="form-group row">
 										<label for="deductions" class="col-sm-3 text-right control-label col-form-label">Deductions</label>
 										<div class="col-sm-9">
-											<input type="number" class="form-control" id="deductions" name="deductions" placeholder="Deductions.." value="0">
+											<input type="text" class="form-control number" id="deductions" name="deductions" placeholder="Deductions.." value="0">
 										</div>
 									</div>
 

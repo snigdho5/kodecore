@@ -91,7 +91,7 @@
 									<div class="form-group row">
 										<label for="return_rate" class="col-sm-3 text-right control-label col-form-label">Return Rate</label>
 										<div class="col-sm-9">
-											<input type="number" class="form-control" id="return_rate" name="return_rate" placeholder="Return Rate..">
+											<input type="text" class="form-control number" id="return_rate" name="return_rate" placeholder="Return Rate..">
 										</div>
 									</div>
 

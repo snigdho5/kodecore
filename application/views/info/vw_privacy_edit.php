@@ -86,21 +86,28 @@
 									<div class="form-group row">
 										<label for="gst_rate" class="col-sm-3 text-right control-label col-form-label">GST %</label>
 										<div class="col-sm-9">
-											<input type="number" class="form-control" id="gst_rate" name="gst_rate" placeholder="Enter.." value="<?php echo ($info_data) ? $info_data['gst'] : ''; ?>">
+											<input type="text" class="form-control number" id="gst_rate" name="gst_rate" placeholder="Enter.." value="<?php echo ($info_data) ? $info_data['gst'] : ''; ?>">
 										</div>
 									</div>
 									
 									<div class="form-group row">
 										<label for="tds_rate" class="col-sm-3 text-right control-label col-form-label">TDS %</label>
 										<div class="col-sm-9">
-											<input type="number" class="form-control" id="tds_rate" name="tds_rate" placeholder="Enter.." value="<?php echo ($info_data) ? $info_data['tds'] : ''; ?>">
+											<input type="text" class="form-control number" id="tds_rate" name="tds_rate" placeholder="Enter.." value="<?php echo ($info_data) ? $info_data['tds'] : ''; ?>">
 										</div>
 									</div>
 
 									<div class="form-group row">
 										<label for="royalty_rate" class="col-sm-3 text-right control-label col-form-label">Royalty %</label>
 										<div class="col-sm-9">
-											<input type="number" class="form-control" id="royalty_rate" name="royalty_rate" placeholder="Enter.." value="<?php echo ($info_data) ? $info_data['royalty'] : ''; ?>">
+											<input type="text" class="form-control number" id="royalty_rate" name="royalty_rate" placeholder="Enter.." value="<?php echo ($info_data) ? $info_data['royalty'] : ''; ?>">
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<label for="admin_charges" class="col-sm-3 text-right control-label col-form-label">Admin Charges %</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control number" id="admin_charges" name="admin_charges" placeholder="Admin Charges.." value="<?php echo ($info_data) ? $info_data['admin_charges'] : ''; ?>">
 										</div>
 									</div>
 
