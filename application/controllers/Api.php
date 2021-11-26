@@ -1692,11 +1692,11 @@ class Api extends CI_Controller
 
                                             if($payment_breakup == '2'){
                                                 if($installment_serial == '1'){
-                                                    $notification_title = 'You have successfully paid your first installment for an IT project';
-                                                    $notification_body = 'Thanks for buying an IT project. Payment of first installment was successful';
+                                                    $notification_title = 'You have successfully paid your LOI for an IT project';
+                                                    $notification_body = 'Thanks for buying an IT project. Payment of LOI was successful';
                                                 }else{
-                                                    $notification_title = 'You have successfully paid your last installment for an IT project';
-                                                    $notification_body = 'Thanks for buying an IT project. Payment of last installment was successful';
+                                                    $notification_title = 'You have successfully paid your rest amount for an IT project';
+                                                    $notification_body = 'Thanks for buying an IT project. Payment of rest amount was successful';
                                                 }
                                             }else{
                                                 $notification_title = 'You bought an IT project';
@@ -1929,7 +1929,7 @@ class Api extends CI_Controller
                                         $pay_status = ($value->payment_status = 1)?'Paid':'Not Paid';
 
                                         if($value->installment_serial == 1){
-                                            $ins_msg = '(First Installment)';
+                                            $ins_msg = '(LOI)';
 
                                             $installment_tr = '
                                             <tr>
@@ -1937,7 +1937,7 @@ class Api extends CI_Controller
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">'.$ins_msg.'</td>
                                             </tr>';
                                         }else if ($value->installment_serial == 2){
-                                            $ins_msg = '(Last Installment)';
+                                            $ins_msg = '(Rest Amount)';
 
                                             $installment_tr = '
                                             <tr>
