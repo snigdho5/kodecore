@@ -102,6 +102,13 @@
 											<input type="number" class="form-control" id="amount" name="amount" placeholder="Amount..">
 										</div>
 									</div>
+									
+									<div class="form-group row">
+										<label for="deductions" class="col-sm-3 text-right control-label col-form-label">Deductions</label>
+										<div class="col-sm-9">
+											<input type="number" class="form-control" id="deductions" name="deductions" placeholder="Deductions.." value="0">
+										</div>
+									</div>
 
 									<div class="form-group row">
 										<label for="remarks" class="col-sm-3 text-right control-label col-form-label">Remarks</label>

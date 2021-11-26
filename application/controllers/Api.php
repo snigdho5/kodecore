@@ -1569,7 +1569,7 @@ class Api extends CI_Controller
                     if (!empty($decodedParam)) {
 
                         //validation starts
-                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->it_proj_id) && $decodedParam->it_proj_id != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && $decodedParam->tds_per != '' && isset($decodedParam->royalty_per) && $decodedParam->royalty_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '' && isset($decodedParam->payment_breakup) && $decodedParam->payment_breakup != '') {
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->it_proj_id) && $decodedParam->it_proj_id != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '' && isset($decodedParam->payment_breakup) && $decodedParam->payment_breakup != '') {
 
                             $if_not_blank = 1; //not blank
                             $customer_id = xss_clean($decodedParam->user_id);
@@ -1577,10 +1577,10 @@ class Api extends CI_Controller
                             $received_amount = xss_clean($decodedParam->amount);
                             $gst_per = xss_clean($decodedParam->gst_per);
                             $gst_rate = xss_clean($decodedParam->gst_rate);
-                            $tds_per = xss_clean($decodedParam->tds_per);
-                            $tds_rate = xss_clean($decodedParam->tds_rate);
-                            $royalty_per = xss_clean($decodedParam->royalty_per);
-                            $royalty_rate = xss_clean($decodedParam->royalty_rate);
+                            // $tds_per = xss_clean($decodedParam->tds_per);
+                            // $tds_rate = xss_clean($decodedParam->tds_rate);
+                            // $royalty_per = xss_clean($decodedParam->royalty_per);
+                            // $royalty_rate = xss_clean($decodedParam->royalty_rate);
                             $grand_total = xss_clean($decodedParam->grand_total);
                             $payment_status = xss_clean($decodedParam->payment_status);
                             $payment_response = xss_clean($decodedParam->payment_id);
@@ -1657,10 +1657,10 @@ class Api extends CI_Controller
                                     'received_amount' => $grand_total,
                                     'gst_per' => $gst_per,
                                     'gst_rate' => $gst_rate,
-                                    'tds_per' => $tds_per,
-                                    'tds_rate' => $tds_rate,
-                                    'royalty_per' => $royalty_per,
-                                    'royalty_rate' => $royalty_rate,
+                                    // 'tds_per' => $tds_per,
+                                    // 'tds_rate' => $tds_rate,
+                                    // 'royalty_per' => $royalty_per,
+                                    // 'royalty_rate' => $royalty_rate,
                                     'subtotal' => $received_amount,
                                     'payment_status' => $payment_status,
                                     'payment_response' => $payment_response,

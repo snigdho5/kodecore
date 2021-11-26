@@ -506,7 +506,7 @@ class ITProjects extends CI_Controller
                         'customer_id'  => $value->customer_id,
                         'user_fullname'  => $value->first_name . ' ' . $value->last_name,
                         'remarks'  => $value->remarks,
-                        'amount'  => $value->amount,
+                        'amount'  => $value->subtotal_amt,
                         'user_email'  => $value->email,
                         'user_phone'  => $value->phone,
                         'proj_title'  => $value->proj_title
@@ -568,6 +568,7 @@ class ITProjects extends CI_Controller
                 $this->form_validation->set_rules('amount', 'Amount', 'trim|required|numeric|xss_clean|htmlentities');
                 $this->form_validation->set_rules('proj_id', 'IT Project', 'trim|required|numeric|xss_clean|htmlentities');
                 $this->form_validation->set_rules('remarks', 'Remarks', 'trim|required|xss_clean|htmlentities');
+                $this->form_validation->set_rules('deductions', 'Deductions', 'trim|required|xss_clean|htmlentities');
 
                 if ($this->form_validation->run() == FALSE) {
                     $this->form_validation->set_error_delimiters('', '');
@@ -579,6 +580,7 @@ class ITProjects extends CI_Controller
                     $remarks = xss_clean($this->input->post('remarks'));
                     $amount = xss_clean($this->input->post('amount'));
                     $proj_id = xss_clean($this->input->post('proj_id'));
+                    $deductions = xss_clean($this->input->post('deductions'));
 
                     $chkdata = array('customer_id'  => $customer_id);
                     $custData = $this->am->getCustomerData($chkdata, FALSE);
@@ -590,21 +592,54 @@ class ITProjects extends CI_Controller
                     // print_obj($custPayoutMonth);die;
 
                     if(empty($custPayoutMonth)){
-                        $ins_userdata = array(
-                            'customer_id'  => $customer_id,
-                            'proj_id'  => $proj_id,
-                            'amount'  => $amount,
-                            'remarks'  => $remarks,
-                            'added_dtime'  => dtime,
-                            'added_by'  => $this->session->userdata('userid')
-                        );
-                            // print_obj($ins_userdata);die;
-                        $added = $this->am->addPayout($ins_userdata);
+                        
         
-                        if ($added) {
+                        // if ($added) {
 
-                                    $addamt = ($custData->wallet_amount + $amount);
-                                    $upd_user = $this->am->updateCustomer(array('wallet_amount'  => $addamt), array('customer_id'  => $customer_id));
+                            $getPrivacyTnC = $this->am->getAppDetailsData(array('id' => 1));
+                            //print_obj($getPrivacyTnC);die;
+    
+                            if (!empty($getPrivacyTnC)) {
+                                $gst = $getPrivacyTnC->gst;
+                                $tds = $getPrivacyTnC->tds;
+                                $royalty = $getPrivacyTnC->royalty;
+                            }else{
+                                $gst = '0.00';
+                                $tds = '0.00';
+                                $royalty = '0.00';
+                            }
+
+                            $gst_rate = (($amount * $gst)/100);
+                            $royalty_rate = (($amount * $royalty)/100);
+
+                            if($deductions != '' && $deductions > 0){
+                                $subtotal_amt = (($amount - $royalty_rate - $deductions) + $gst_rate);
+                            }else{
+                                $subtotal_amt = (($amount - $royalty_rate) + $gst_rate);
+                            }
+
+
+                                $addamount = ($custData->wallet_amount + $subtotal_amt);
+
+                                    $ins_userdata = array(
+                                        'customer_id'  => $customer_id,
+                                        'proj_id'  => $proj_id,
+                                        'amount'  => $amount,
+                                        'deductions'  => $deductions,
+                                        'gst'  => $gst,
+                                        'gst_rate'  => $gst_rate,
+                                        'royalty'  => $royalty,
+                                        'royalty_rate'  => $royalty_rate,
+                                        'subtotal_amt'  => $subtotal_amt,
+                                        'updated_wallet'  => $addamount,
+                                        'remarks'  => $remarks,
+                                        'added_dtime'  => dtime,
+                                        'added_by'  => $this->session->userdata('userid')
+                                    );
+                                        // print_obj($ins_userdata);die;
+                                    $added = $this->am->addPayout($ins_userdata);
+
+                                    $upd_user = $this->am->updateCustomer(array('wallet_amount'  => $addamount), array('customer_id'  => $customer_id));
 
                                     if($upd_user){
                                         //send notification starts
@@ -674,10 +709,10 @@ class ITProjects extends CI_Controller
                                     }
 
                                     
-                        } else {
-                                $return['added'] = 'failure';
-                                $return['msg'] = 'Something went wrong!';
-                        }
+                        // } else {
+                        //         $return['added'] = 'failure';
+                        //         $return['msg'] = 'Something went wrong!';
+                        // }
                     }else{
                         $return['added'] = 'month_paid';
                         $return['msg'] = 'Already paid to customer for this month on ' . $custPayoutMonth->added_dtime . ', Rs. ' . $custPayoutMonth->amount . '!';
