@@ -232,7 +232,7 @@ class Api extends CI_Controller
 
                                     $return['respData'] = $resp;
                                     $return['success'] = 1;
-                                    $return['message'] = 'User registered successfully!';
+                                    $return['message'] = 'You have registered successfully. An OTP has been sent to your phone and email. Please Verify!';
 
 
                                     //otp sms
@@ -240,24 +240,26 @@ class Api extends CI_Controller
                                     $password = SMS_PASSWORD;
                                     $to = $phone;
                                     $from = SMS_FROM;
-                                    $text = 'Your%2520Registration%2520OTP%2520is%2520'.$otp.'%2520KODECORE';
+                                    $text = 'Your%20Registration%20OTP%20is%20'.$otp.'%20KODECORE';
                                     $send_url = 'https://103.229.250.200/smpp/sendsms?username='.$username.'&password='.$password.'&to='.$to.'&from='.$from.'&text='.$text;
 
                                     $curl = curl_init();
 
                                     curl_setopt_array($curl, array(
-                                    CURLOPT_URL => $send_url,
-                                    CURLOPT_RETURNTRANSFER => true,
-                                    CURLOPT_ENCODING => '',
-                                    CURLOPT_MAXREDIRS => 10,
-                                    CURLOPT_TIMEOUT => 0,
-                                    CURLOPT_FOLLOWLOCATION => true,
-                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                    CURLOPT_CUSTOMREQUEST => 'GET',
+                                        CURLOPT_URL => $send_url,
+                                        CURLOPT_RETURNTRANSFER => true,
+                                        CURLOPT_ENCODING => '',
+                                        CURLOPT_MAXREDIRS => 10,
+                                        CURLOPT_TIMEOUT => 0,
+                                        CURLOPT_FOLLOWLOCATION => true,
+                                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                        CURLOPT_CUSTOMREQUEST => 'GET',
                                     ));
 
-                                    // $response = curl_exec($curl);
-                                    // curl_close($curl);
+                                    $response = curl_exec($curl);
+                                    curl_close($curl);
+
+                                    $return['otp_response'] = $response;
 
                                     // echo $response;
                                     //otp sms ends
@@ -889,8 +891,8 @@ class Api extends CI_Controller
                             $phone = xss_clean($decodedParam->phone);
                             $fcm_token = xss_clean($decodedParam->fcm_token);
 
-                            $otp = '123456';
-                            //$otp = random_numbers(6);
+                            // $otp = '123456';
+                            $otp = random_numbers(6);
 
                             //phone with 10 digit
                             if (preg_match('/^[0-9]{10}+$/', $phone)) {
@@ -912,6 +914,35 @@ class Api extends CI_Controller
                             $userdata = $this->am->getCustomerData($param);
                             if (!empty($userdata)) {
                                 // if ($userdata->login_otp_status == 0) {
+
+                                    //otp sms
+                                    $username = SMS_USERNAME;
+                                    $password = SMS_PASSWORD;
+                                    $to = $phone;
+                                    $from = SMS_FROM;
+                                    $text = 'Your%20Login%20OTP%20is%20'.$otp.'%20KODECORE';
+                                    $send_url = 'https://103.229.250.200/smpp/sendsms?username='.$username.'&password='.$password.'&to='.$to.'&from='.$from.'&text='.$text;
+
+                                    $curl = curl_init();
+
+                                    curl_setopt_array($curl, array(
+                                        CURLOPT_URL => $send_url,
+                                        CURLOPT_RETURNTRANSFER => true,
+                                        CURLOPT_ENCODING => '',
+                                        CURLOPT_MAXREDIRS => 10,
+                                        CURLOPT_TIMEOUT => 0,
+                                        CURLOPT_FOLLOWLOCATION => true,
+                                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                        CURLOPT_CUSTOMREQUEST => 'GET',
+                                    ));
+
+                                    $response = curl_exec($curl);
+                                    curl_close($curl);
+
+                                    // echo $response;
+                                    //otp sms ends
+
+
                                 $upd_array = array(
                                     'login_otp_status' => 1, //sent
                                     'login_otp_value' => $otp,
@@ -919,6 +950,7 @@ class Api extends CI_Controller
                                 );
                                 $paramup = array('customer_id' => $userdata->customer_id);
                                 $updated = $this->am->updateCustomer($upd_array, $paramup);
+                                
                                 if ($updated) {
 
                                     $resp = array(
@@ -935,6 +967,7 @@ class Api extends CI_Controller
                                         'otp_status' => $userdata->otp_status,
                                         'login_otp_status' => $userdata->login_otp_status,
                                         'kyc_status' => $userdata->kyc_status,
+                                        'otp_response' => $response,
                                         // 'user_blocked' => $userdata->user_blocked
                                     );
                                     $return['respData'] = $resp;
@@ -2164,8 +2197,10 @@ class Api extends CI_Controller
                                     'inv_plan_id' => $planData->plan_id,
                                     'title' => $planData->plan_name,
                                     'description' => $planData->plan_description,
-                                    'amount' => $planData->plan_summary,
+                                    'summary' => $planData->plan_summary,
                                     'return_rate' => $planData->plan_return_rate,
+                                    'amount' => $planData->amount,
+                                    'duration' => $planData->duration,
                                     'added_dtime' => $planData->added_dtime,
                                     'status' => $planData->status
                                 );
@@ -2192,6 +2227,8 @@ class Api extends CI_Controller
                                         'description' => $value->plan_description,
                                         'summary' => $value->plan_summary,
                                         'return_rate' => $value->plan_return_rate,
+                                        'amount' => $value->amount,
+                                        'duration' => $value->duration,
                                         'added_dtime' => $value->added_dtime,
                                         'status' => $value->status
                                     );
@@ -2250,16 +2287,18 @@ class Api extends CI_Controller
                     if (!empty($decodedParam)) {
 
                         //validation starts
-                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->inv_plan_id) && $decodedParam->inv_plan_id != '' && isset($decodedParam->inv_amount) && $decodedParam->inv_amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '') {
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->inv_plan_id) && $decodedParam->inv_plan_id != '' && isset($decodedParam->inv_amount) && $decodedParam->inv_amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '') {
+
+                            //&& isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != ''
 
                             $if_not_blank = 1; //not blank
                             $customer_id = xss_clean($decodedParam->user_id);
                             $plan_id = xss_clean($decodedParam->inv_plan_id);
                             $received_amount = xss_clean($decodedParam->inv_amount);
-                            $gst_per = xss_clean($decodedParam->gst_per);
-                            $gst_rate = xss_clean($decodedParam->gst_rate);
-                            $tds_per = xss_clean($decodedParam->tds_per);
-                            $tds_rate = xss_clean($decodedParam->tds_rate);
+                            // $gst_per = xss_clean($decodedParam->gst_per);
+                            // $gst_rate = xss_clean($decodedParam->gst_rate);
+                            // $tds_per = xss_clean($decodedParam->tds_per);
+                            // $tds_rate = xss_clean($decodedParam->tds_rate);
                             $grand_total = xss_clean($decodedParam->grand_total);
                             $payment_status = xss_clean($decodedParam->payment_status);
                             $payment_response = xss_clean($decodedParam->payment_id); 
@@ -2291,10 +2330,10 @@ class Api extends CI_Controller
                                 'customer_id' => $customer_id,
                                 'plan_id' => $plan_id,
                                 'received_amount' => $grand_total,
-                                'gst_per' => $gst_per,
-                                'gst_rate' => $gst_rate,
-                                'tds_per' => $tds_per,
-                                'tds_rate' => $tds_rate,
+                                // 'gst_per' => $gst_per,
+                                // 'gst_rate' => $gst_rate,
+                                // 'tds_per' => $tds_per,
+                                // 'tds_rate' => $tds_rate,
                                 'subtotal' => $received_amount,
                                 'payment_status' => $payment_status,
                                 'payment_response' => $payment_response,
@@ -2571,12 +2610,10 @@ class Api extends CI_Controller
                                              <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$phone</td>
                                              </tr>
  
- 
                                              <tr>
                                              <td style="width:20%; height: 20px;">Payment Status:</td>
                                              <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$pay_status</td>
                                              </tr>
- 
  
                                              <tr>
                                              <td style="width:20%; height: 20px;">Status:</td>
@@ -2587,16 +2624,6 @@ class Api extends CI_Controller
                                              <td style="width:20%; height: 20px;">Actual Amount:</td>
                                              <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$subtotal</td>
                                              </tr>
-
-                                            <tr>
-                                            <td style="width:20%; height: 20px;">GST ($gst_per %):</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $gst_rate</td>
-                                            </tr>
-   
-                                            <tr>
-                                            <td style="width:20%; height: 20px;">TDS ($tds_per %):</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $tds_rate</td>
-                                            </tr>
 
                                             <tr>
                                             <td style="width:20%; height: 20px;">Received Amount:</td>

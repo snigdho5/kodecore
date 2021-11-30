@@ -94,6 +94,20 @@
 											<input type="text" class="form-control number" id="return_rate" name="return_rate" placeholder="Return Rate..">
 										</div>
 									</div>
+									
+									<div class="form-group row">
+										<label for="amount" class="col-sm-3 text-right control-label col-form-label">Amount</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control number" id="amount" name="amount" placeholder="Amount">
+										</div>
+									</div>
+									
+									<div class="form-group row">
+										<label for="duration" class="col-sm-3 text-right control-label col-form-label">Duration (Months)</label>
+										<div class="col-sm-9">
+											<input type="number" class="form-control" id="duration" name="duration" placeholder="Duration (Months)">
+										</div>
+									</div>
 
 								</div>
 								<div class="border-top">

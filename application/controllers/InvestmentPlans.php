@@ -21,6 +21,8 @@ class InvestmentPlans extends CI_Controller
                         'planid'  => $value->plan_id,
                         'name'  => $value->plan_name,
                         'summary'  => $value->plan_summary,
+                        'duration'  => $value->duration,
+                        'amount'  => $value->amount,
                         'description'  => $value->plan_description,
                         'return_rate'  => $value->plan_return_rate,
                         'dtime'  => $value->added_dtime,
@@ -81,6 +83,8 @@ class InvestmentPlans extends CI_Controller
                     'planid'  => $invplansData->plan_id,
                     'title'  => $invplansData->plan_name,
                     'summary'  => $invplansData->plan_summary,
+                    'duration'  => $invplansData->duration,
+                    'amount'  => $invplansData->amount,
                     'description'  => $invplansData->plan_description,
                     'return_rate'  => $invplansData->plan_return_rate,
                     'dtime'  => $invplansData->added_dtime,
@@ -108,6 +112,8 @@ class InvestmentPlans extends CI_Controller
             $plan_description = xss_clean($this->input->post('description'));
             $plan_summary = xss_clean($this->input->post('summary'));
             $plan_return_rate = xss_clean($this->input->post('return_rate'));
+            $duration = xss_clean($this->input->post('duration'));
+            $amount = xss_clean($this->input->post('amount'));
 
 
             $upd_data = array(
@@ -115,6 +121,8 @@ class InvestmentPlans extends CI_Controller
                 'plan_description'  => $plan_description,
                 'plan_summary'  => $plan_summary,
                 'plan_return_rate'  => $plan_return_rate,
+                'duration'  => $duration,
+                'amount'  => $amount,
                 'edited_dtime'  => dtime,
                 'edited_by'  => $this->session->userdata('userid')
             );
@@ -136,14 +144,16 @@ class InvestmentPlans extends CI_Controller
                         'summary'  => $invplansData->plan_summary,
                         'description'  => $invplansData->plan_description,
                         'return_rate'  => $invplansData->plan_return_rate,
+                        'duration'  => $invplansData->duration,
+                        'amount'  => $invplansData->amount,
                         'dtime'  => $invplansData->added_dtime,
                         'status'  => $invplansData->status
                     );
                 } else {
                     $this->data['update_failure'] = 'Not updated!';
                 }
-
-                $this->load->view('investmentplans/vw_invplan_edit', $this->data, false);
+                redirect(base_url('edit-investment-plan/' . encode_url($plan_id)));
+                // $this->load->view('investmentplans/vw_invplan_edit', $this->data, false);
             } else {
                 redirect(base_url());
             }
@@ -172,6 +182,8 @@ class InvestmentPlans extends CI_Controller
                 $this->form_validation->set_rules('description', 'Description', 'trim|required|xss_clean|htmlentities');
                 $this->form_validation->set_rules('summary', 'Summary', 'trim|required|xss_clean|htmlentities');
                 $this->form_validation->set_rules('return_rate', 'Return Rate', 'trim|required|numeric|xss_clean|htmlentities');
+                $this->form_validation->set_rules('duration', 'Duration', 'trim|required|numeric|xss_clean|htmlentities');
+                $this->form_validation->set_rules('amount', 'Amount', 'trim|required|numeric|xss_clean|htmlentities');
 
                 if ($this->form_validation->run() == FALSE) {
                     $this->form_validation->set_error_delimiters('', '');
@@ -183,6 +195,8 @@ class InvestmentPlans extends CI_Controller
                     $plan_description = xss_clean($this->input->post('description'));
                     $plan_summary = xss_clean($this->input->post('summary'));
                     $plan_return_rate = xss_clean($this->input->post('return_rate'));
+                    $duration = xss_clean($this->input->post('duration'));
+                    $amount = xss_clean($this->input->post('amount'));
 
                     $chkdata = array('plan_name'  => $plan_name);
                     $plandata = $this->am->getInvPlansData($chkdata, FALSE);
@@ -195,6 +209,8 @@ class InvestmentPlans extends CI_Controller
                             'plan_description'  => $plan_description,
                             'plan_summary'  => $plan_summary,
                             'plan_return_rate'  => $plan_return_rate,
+                            'duration'  => $duration,
+                            'amount'  => $amount,
                             'added_dtime'  => dtime,
                             'added_by'  => $this->session->userdata('userid')
                         );
