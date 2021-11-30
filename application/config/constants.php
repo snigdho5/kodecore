@@ -117,3 +117,9 @@ define('FCM_URL', 'https://fcm.googleapis.com/fcm/send');
 //rajorpay
 define('KEY_ID', 'rzp_test_T42fEdJBqlAKNi');
 define('KEY_SECRET', 'YgcFgxml7ITCbnvbNfjALIKr');
+
+
+//sms gateway
+define('SMS_USERNAME', 'kodeco');
+define('SMS_PASSWORD', 'sms2021*');
+define('SMS_FROM', 'KODECO');

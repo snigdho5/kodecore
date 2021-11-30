@@ -168,8 +168,8 @@ class Api extends CI_Controller
                             $last_name = xss_clean($decodedParam->lname);
                             $fcm_token = xss_clean($decodedParam->fcm_token);
                             $password = encrypt_it(random_strings(8));
-                            // $otp = random_numbers(6);
-                            $otp = '123456';
+                            $otp = random_numbers(6);
+                            // $otp = '123456';
 
 
                             // decrypt 
@@ -233,6 +233,34 @@ class Api extends CI_Controller
                                     $return['respData'] = $resp;
                                     $return['success'] = 1;
                                     $return['message'] = 'User registered successfully!';
+
+
+                                    //otp sms
+                                    $username = SMS_USERNAME;
+                                    $password = SMS_PASSWORD;
+                                    $to = $phone;
+                                    $from = SMS_FROM;
+                                    $text = 'Your%2520Registration%2520OTP%2520is%2520'.$otp.'%2520KODECORE';
+                                    $send_url = 'https://103.229.250.200/smpp/sendsms?username='.$username.'&password='.$password.'&to='.$to.'&from='.$from.'&text='.$text;
+
+                                    $curl = curl_init();
+
+                                    curl_setopt_array($curl, array(
+                                    CURLOPT_URL => $send_url,
+                                    CURLOPT_RETURNTRANSFER => true,
+                                    CURLOPT_ENCODING => '',
+                                    CURLOPT_MAXREDIRS => 10,
+                                    CURLOPT_TIMEOUT => 0,
+                                    CURLOPT_FOLLOWLOCATION => true,
+                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                    CURLOPT_CUSTOMREQUEST => 'GET',
+                                    ));
+
+                                    // $response = curl_exec($curl);
+                                    // curl_close($curl);
+
+                                    // echo $response;
+                                    //otp sms ends
 
 
                                     //email
@@ -2002,7 +2030,6 @@ class Api extends CI_Controller
 
                                             $installment_tr
 
-                                            
                                             <tr>
                                             <td style="width:20%; height: 20px;">Project Amount:</td>
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">$project_amount</td>
@@ -2016,16 +2043,6 @@ class Api extends CI_Controller
                                             <tr>
                                             <td style="width:20%; height: 20px;">GST ($gst_per %):</td>
                                             <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $gst_rate</td>
-                                            </tr>
-   
-                                            <tr>
-                                            <td style="width:20%; height: 20px;">TDS ($tds_per %):</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">+ $tds_rate</td>
-                                            </tr>
-
-                                            <tr>
-                                            <td style="width:20%; height: 20px;">Royalty ($royalty_per %):</td>
-                                            <td style="border-bottom: 1px solid #ccc; width: 60%; height: 20px;">- $royalty_rate</td>
                                             </tr>
 
                                             <tr>

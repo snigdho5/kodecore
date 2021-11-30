@@ -227,7 +227,7 @@ class Auth_model extends MY_Model
 	public function getCustomerInvesmentPlans($param = null, $many = FALSE, $order = 'DESC', $order_by = 'customers_investment_plans.customer_id')
 	{
 
-		$this->db->select('customers_investment_plans.*, customers.first_name, customers.last_name, customers.email, customers.phone, investment_plans.plan_name');
+		$this->db->select('customers_investment_plans.*, customers.first_name, customers.last_name, customers.email, customers.phone, investment_plans.plan_name, investment_plans.duration');
 		$this->db->join('customers', 'customers.customer_id = customers_investment_plans.customer_id', 'left');
 		$this->db->join('investment_plans', 'investment_plans.plan_id = customers_investment_plans.plan_id', 'left');
 
@@ -654,7 +654,7 @@ class Auth_model extends MY_Model
 		}
 	}
 	
-		//payout
+		//it proj payout
 		public function addPayout($data)
 		{
 			$this->table = 'it_projects_payout';
@@ -724,6 +724,85 @@ class Auth_model extends MY_Model
 			$this->db->order_by($order_by, $order);
 	
 			$query = $this->db->get('it_projects_payout');
+			// echo $this->db->last_query();die;
+	
+			if ($many != TRUE) {
+				return $query->row();
+			} else {
+				return $query->result();
+			}
+		}
+
+		//inv plans payout
+		public function addPayoutInvPlan($data)
+		{
+			$this->table = 'inv_plan_payout';
+			return $this->store($data);
+		}
+		public function getInvPlanPayoutData($param = null, $many = FALSE, $order_by = 'payout_id', $order = 'DESC')
+		{
+			$this->table = 'inv_plan_payout';
+			if ($param != null && $many == FALSE) {
+				return $this->get_one($param);
+			} else if ($param != null && $many == TRUE) {
+				return $this->get_many($param, $order_by, $order, FALSE);
+			} else {
+				return $this->get_many(null, $order_by, $order, FALSE);
+			}
+		}
+
+		public function getInvPlanPayoutUserData($param = null, $many = FALSE, $order = 'DESC', $order_by = 'inv_plan_payout.payout_id')
+		{
+	
+			$this->db->select('
+			inv_plan_payout.*,
+				customers.first_name,
+				customers.last_name,
+				customers.email,
+				customers.phone,
+				customers.wallet_amount,
+				customers.bank_name,
+				customers.branch_name,
+				customers.ac_no,
+				customers.ifsc,
+				customers.ac_name,
+				investment_plans.plan_name
+				  ');
+	
+			$this->db->join('customers', 'customers.customer_id = inv_plan_payout.customer_id', 'left');
+			$this->db->join('investment_plans', 'investment_plans.plan_id = inv_plan_payout.plan_id', 'left');
+	
+			if ($param != null) {
+				$this->db->where($param);
+			}
+	
+			$this->db->order_by($order_by, $order);
+	
+			$query = $this->db->get('inv_plan_payout');
+			// echo $this->db->last_query();die;
+	
+			if ($many != TRUE) {
+				return $query->row();
+			} else {
+				return $query->result();
+			}
+		}
+
+		public function getInvPlanPayoutMonthData($customer_id = null, $proj_id = null, $many = FALSE, $order = 'DESC', $order_by = 'payout_id')
+		{
+	
+			$this->db->select('
+			inv_plan_payout.*
+				  ');
+	
+			if ($customer_id != null) {
+				$st = 'customer_id = ' . $customer_id . ' AND plan_id = ' . $proj_id . ' AND month(added_dtime) = month(UTC_TIMESTAMP())';
+				$this->db->where($st, null, false);
+			}
+	
+			$this->db->order_by($order_by, $order);
+	
+			$query = $this->db->get('inv_plan_payout');
 			// echo $this->db->last_query();die;
 	
 			if ($many != TRUE) {

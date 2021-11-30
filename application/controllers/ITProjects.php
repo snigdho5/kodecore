@@ -492,6 +492,7 @@ class ITProjects extends CI_Controller
         }
     }
 
+    //payout
     
     public function onGetPayoutITProject()
     {
@@ -692,7 +693,7 @@ class ITProjects extends CI_Controller
                                                     'customer_id' => $customer_id,
                                                     "notification_title" => $notification_title,
                                                     "notification_body" => $notification_body,
-                                                    "notification_event" => 'buy_inv_plan',
+                                                    "notification_event" => 'payout_inv_plan',
                                                     "dtime" => dtime
                                                 );
 

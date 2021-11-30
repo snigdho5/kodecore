@@ -41,9 +41,13 @@ $page =  $this->uri->segment(1);
 
 				
 				<li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Payout </span></a>
-					<ul aria-expanded="false" class="collapse  first-level <?php echo ($page == 'new-monthly-payout-it-project') ? 'in' : ''; ?>">
+					<ul aria-expanded="false" class="collapse  first-level <?php echo ($page == 'new-monthly-payout-it-project' && $page == 'new-monthly-payout-inv-plan' ) ? 'in' : ''; ?>">
 
 						<li class="sidebar-item <?php echo ($page == 'new-monthly-payout-it-project') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>monthly-payout-it-projects" class="sidebar-link <?php echo ($page == 'new-monthly-payout-it-project') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> IT Projects Monthly Payout</span></a></li>
+
+						
+						<li class="sidebar-item <?php echo ($page == 'new-monthly-payout-inv-plan') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>monthly-payout-inv-plan" class="sidebar-link <?php echo ($page == 'new-monthly-payout-inv-plan') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> Investment Plan Monthly Payout</span></a></li>
+
 					</ul>
 				</li>
 

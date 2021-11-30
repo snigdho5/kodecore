@@ -64,6 +64,13 @@ $route['changeinvplan'] = 'InvestmentPlans/onChangeInvPlan';
 $route['delinvplan'] = 'InvestmentPlans/onDeleteInvPlan';
 $route['applied-investment-plans/(:any)'] = 'InvestmentPlans/onGetAppliedInvPlan/$1';
 
+
+$route['monthly-payout-inv-plans'] = 'InvestmentPlans/onGetPayoutInvPlan';
+$route['new-monthly-payout-inv-plans'] = 'InvestmentPlans/onGetNewPayoutInvPlan';
+$route['givemonthlypayout-inv-plans'] = 'InvestmentPlans/onSetNewPayoutInvPlan';
+$route['get-inv-plans-by-user'] = 'InvestmentPlans/onGetInvPlanByUser';
+
+
 //cryptocurrency management
 $route['view-cryptocurrency'] = 'Crypto/onGetCryptoDetails';
 $route['update-cryptocurrency'] = 'Crypto/onSetCryptoDetails';

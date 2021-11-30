@@ -257,4 +257,87 @@ $(document).ready(function () {
 
     });
 
+
+     $("#create_payout_form").submit(function (e) {
+
+        e.preventDefault();
+        
+            $.ajax({
+                type: 'POST',
+                url: BASE_URL + 'givemonthlypayout-inv-plans',
+                cache: false,
+                data: $('#create_payout_form').serialize(),
+                beforeSend: function () {
+                    $('#payout_btn_submit').html('Creating..').prop('disabled', true);
+                },
+                success: function (d) {
+                    if (d.added == "rule_error") {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: d.errors,
+                            confirmButtonText: 'Close',
+                            confirmButtonColor: '#d33',
+                            allowOutsideClick: false,
+                        });
+                        $('#payout_btn_submit').html('Submit').prop('disabled', false);
+
+                    } else if (d.added == 'success') {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: d.msg,
+                            confirmButtonText: 'Close',
+                            confirmButtonColor: '#d33',
+                            allowOutsideClick: false,
+                        });
+
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 100);
+
+                    }  else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: d.msg,
+                            confirmButtonText: 'Close',
+                            confirmButtonColor: '#d33',
+                            allowOutsideClick: false,
+                        });
+                        $('#payout_btn_submit').html('Submit').prop('disabled', false);
+                    }
+                }
+            });
+       
+    });
+
+    $(document).on('change', '#customer_id', function () {
+        var customer_id = $('#customer_id').val();
+        $('#plan_id').html('<option value="">Select</option>');
+        
+        if (customer_id != '') {
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + 'get-inv-plans-by-user',
+                data: {
+                    customer_id: customer_id
+                },
+
+                success: function (d) {
+                    if (d.status == 1) {
+                        $('#plan_id').html(d.inv_data);
+                    }else {
+                        $('#plan_id').html('<option value="">Select</option>');
+                    }
+                }
+            });
+        } else {
+            // $('#plan_id').html('<option value="">Select</option>');
+        }
+
+    });
+
 });
