@@ -46,7 +46,7 @@ $page =  $this->uri->segment(1);
 						<li class="sidebar-item <?php echo ($page == 'new-monthly-payout-it-project') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>monthly-payout-it-projects" class="sidebar-link <?php echo ($page == 'new-monthly-payout-it-project') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> IT Projects Monthly Payout</span></a></li>
 
 						
-						<li class="sidebar-item <?php echo ($page == 'new-monthly-payout-inv-plan') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>monthly-payout-inv-plan" class="sidebar-link <?php echo ($page == 'new-monthly-payout-inv-plan') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> Investment Plan Monthly Payout</span></a></li>
+						<li class="sidebar-item <?php echo ($page == 'new-monthly-payout-inv-plan') ? 'active' : ''; ?>"><a href="<?php echo base_url(); ?>monthly-payout-inv-plans" class="sidebar-link <?php echo ($page == 'new-monthly-payout-inv-plan') ? 'active' : ''; ?>"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu"> Investment Plan Monthly Payout</span></a></li>
 
 					</ul>
 				</li>

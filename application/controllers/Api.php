@@ -3205,16 +3205,18 @@ class Api extends CI_Controller
                     if (!empty($decodedParam)) {
 
                         //validation starts
-                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->crypto_id) && $decodedParam->crypto_id != '' && isset($decodedParam->quantity) && $decodedParam->quantity != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '') {
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->crypto_id) && $decodedParam->crypto_id != '' && isset($decodedParam->quantity) && $decodedParam->quantity != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '') {
+
+                            //&& isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' 
 
                             $if_not_blank = 1; //not blank
                             $customer_id = xss_clean($decodedParam->user_id);
                             $crypto_id = xss_clean($decodedParam->crypto_id);
                             $received_amount = xss_clean($decodedParam->amount);
-                            $gst_per = xss_clean($decodedParam->gst_per);
-                            $gst_rate = xss_clean($decodedParam->gst_rate);
-                            $tds_per = xss_clean($decodedParam->tds_per);
-                            $tds_rate = xss_clean($decodedParam->tds_rate);
+                            // $gst_per = xss_clean($decodedParam->gst_per);
+                            // $gst_rate = xss_clean($decodedParam->gst_rate);
+                            // $tds_per = xss_clean($decodedParam->tds_per);
+                            // $tds_rate = xss_clean($decodedParam->tds_rate);
                             $grand_total = xss_clean($decodedParam->grand_total);
                             $quantity = xss_clean($decodedParam->quantity);
                         } else {
