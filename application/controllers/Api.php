@@ -323,7 +323,6 @@ class Api extends CI_Controller
         echo json_encode($return);
     }
 
-
     public function onVerifyCustomer()
     {
         $jsonData = $this->input->post('oAuth_json');
@@ -441,7 +440,6 @@ class Api extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($return);
     }
-
 
     public function onKycCustomer()
     {
@@ -1174,7 +1172,6 @@ class Api extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($return);
     }
-
 
     public function onLogoutCustomer()
     {
@@ -2326,10 +2323,24 @@ class Api extends CI_Controller
                             // $checkCustomerProject = $this->am->getCustomerInvesmentPlanData($paramcheck);
 
                             // if (empty($checkCustomerProject)) {
+
+                                $getInvPlan = $this->am->getInvPlansData(array('plan_id' => $plan_id));
+                                if(!empty($getInvPlan)){
+                                    $buy_date = dtime;
+                                    $duration = $getInvPlan->duration;
+        
+                                    $endDate = date('Y-m-d H:i:s', strtotime("$buy_date +$duration Month"));
+                                }else{
+                                    $duration = 0;
+                                    $endDate = '';
+                                }
+
                             $param = array(
                                 'customer_id' => $customer_id,
                                 'plan_id' => $plan_id,
                                 'received_amount' => $grand_total,
+                                'duration' => $duration,
+                                'end_date' => $endDate,
                                 // 'gst_per' => $gst_per,
                                 // 'gst_rate' => $gst_rate,
                                 // 'tds_per' => $tds_per,
@@ -2924,7 +2935,9 @@ class Api extends CI_Controller
                     if (!empty($decodedParam)) {
 
                         //validation starts
-                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->crypto_id) && $decodedParam->crypto_id != '' && isset($decodedParam->quantity) && $decodedParam->quantity != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '') {
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->crypto_id) && $decodedParam->crypto_id != '' && isset($decodedParam->quantity) && $decodedParam->quantity != '' && isset($decodedParam->amount) && $decodedParam->amount != '' && isset($decodedParam->payment_status) && $decodedParam->payment_status != '' && isset($decodedParam->payment_id) && $decodedParam->payment_id != '' && isset($decodedParam->grand_total) && $decodedParam->grand_total != '') {
+
+                            // && isset($decodedParam->gst_per) && $decodedParam->gst_per != '' && isset($decodedParam->gst_rate) && $decodedParam->gst_rate != '' && isset($decodedParam->tds_per) && $decodedParam->tds_per != '' && isset($decodedParam->tds_rate) && $decodedParam->tds_rate != ''
 
                             $if_not_blank = 1; //not blank
                             $customer_id = xss_clean($decodedParam->user_id);
@@ -2933,10 +2946,10 @@ class Api extends CI_Controller
                             $quantity = xss_clean($decodedParam->quantity); 
                             $payment_status = xss_clean($decodedParam->payment_status);
                             $payment_response = xss_clean($decodedParam->payment_id);
-                            $gst_per = xss_clean($decodedParam->gst_per);
-                            $gst_rate = xss_clean($decodedParam->gst_rate);
-                            $tds_per = xss_clean($decodedParam->tds_per);
-                            $tds_rate = xss_clean($decodedParam->tds_rate);
+                            // $gst_per = xss_clean($decodedParam->gst_per);
+                            // $gst_rate = xss_clean($decodedParam->gst_rate);
+                            // $tds_per = xss_clean($decodedParam->tds_per);
+                            // $tds_rate = xss_clean($decodedParam->tds_rate);
                             $grand_total = xss_clean($decodedParam->grand_total);
  
                             //validations
@@ -2960,10 +2973,10 @@ class Api extends CI_Controller
                                 'customer_id' => $customer_id,
                                 'crypto_pid' => $crypto_id,
                                 'received_amount' => $grand_total,
-                                'gst_per' => $gst_per,
-                                'gst_rate' => $gst_rate,
-                                'tds_per' => $tds_per,
-                                'tds_rate' => $tds_rate,
+                                // 'gst_per' => $gst_per,
+                                // 'gst_rate' => $gst_rate,
+                                // 'tds_per' => $tds_per,
+                                // 'tds_rate' => $tds_rate,
                                 'subtotal' => $received_amount,
                                 'quantity' => $quantity,
                                 'payment_status' => $payment_status,
@@ -3232,10 +3245,10 @@ class Api extends CI_Controller
                                 'customer_id' => $customer_id,
                                 'crypto_pid' => $crypto_id,
                                 'received_amount' => $grand_total,
-                                'gst_per' => $gst_per,
-                                'gst_rate' => $gst_rate,
-                                'tds_per' => $tds_per,
-                                'tds_rate' => $tds_rate,
+                                // 'gst_per' => $gst_per,
+                                // 'gst_rate' => $gst_rate,
+                                // 'tds_per' => $tds_per,
+                                // 'tds_rate' => $tds_rate,
                                 'subtotal' => $received_amount,
                                 'quantity' => $quantity,
                                 'added_dtime' => dtime
@@ -3380,11 +3393,11 @@ class Api extends CI_Controller
                     if (!empty($decodedParam)) {
 
                         //validation starts
-                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '' && isset($decodedParam->crypto_id) && $decodedParam->crypto_id != '') {
+                        if (isset($decodedParam->user_id) && $decodedParam->user_id != '') {
 
                             $if_not_blank = 1; //not blank
                             $customer_id = xss_clean($decodedParam->user_id);
-                            $crypto_id = xss_clean($decodedParam->crypto_id);
+                            $crypto_id = (isset($decodedParam->crypto_id) && $decodedParam->crypto_id != '')?xss_clean($decodedParam->crypto_id):'';
                         } else {
                             $if_not_blank = 0;
                             $out_message += array('valid_fields' => 'Missing Required Fields!!');
@@ -3398,66 +3411,156 @@ class Api extends CI_Controller
                             $total_sell_amount = 0;
                             $total_sell_qty = 0;
 
-                            $paramUp = array('application_status' => '1', 'crypto_pid' => $crypto_id, 'customer_id' => $customer_id);
+                            
+                            if($crypto_id != ''){
+                                $paramUp = array('application_status' => '1', 'crypto_pid' => $crypto_id, 'customer_id' => $customer_id);
 
-                            $getBuyCrypto = $this->am->getCryptoBuyFinalData($paramUp);
+                                $getBuyCrypto = $this->am->getCryptoBuyFinalData($paramUp);
 
-                            if (!empty($getBuyCrypto) && $getBuyCrypto->customer_id != '') {
 
-                                $resp['buy_data'][] = array(
-                                    'user_id' => $getBuyCrypto->customer_id,
-                                    'crypto_id' => $getBuyCrypto->crypto_pid,
-                                    'total_received_amount' => $getBuyCrypto->total_received_amount,
-                                    'total_quantity' => $getBuyCrypto->total_quantity
+
+                                if (!empty($getBuyCrypto) && $getBuyCrypto->customer_id != '') {
+
+                                    $resp['buy_data'][] = array(
+                                        'user_id' => $getBuyCrypto->customer_id,
+                                        'crypto_id' => $getBuyCrypto->crypto_pid,
+                                        'total_received_amount' => $getBuyCrypto->total_received_amount,
+                                        'total_quantity' => $getBuyCrypto->total_quantity
+                                    );
+                                    $total_buy_amount = $getBuyCrypto->total_received_amount;
+                                    $total_buy_qty = $getBuyCrypto->total_quantity;
+                                } else {
+                                    $resp['buy_data'] = [];
+                                    $total_buy_amount = 0;
+                                    $total_buy_qty = 0;
+                                }
+
+                                $paramUp = array('application_status' => '1', 'crypto_pid' => $crypto_id, 'customer_id' => $customer_id);
+
+                                $getSellCrypto = $this->am->getCryptoSellFinalData($paramUp);
+
+                                if (!empty($getSellCrypto) && $getSellCrypto->customer_id != '') {
+
+                                    $resp['sell_data'][] = array(
+                                        'user_id' => $getSellCrypto->customer_id,
+                                        'crypto_id' => $getSellCrypto->crypto_pid,
+                                        'total_received_amount' => $getSellCrypto->total_received_amount,
+                                        'total_quantity' => $getSellCrypto->total_quantity
+                                    );
+                                    $total_sell_amount = $getSellCrypto->total_received_amount;
+                                    $total_sell_qty = $getSellCrypto->total_quantity;
+                                } else {
+                                    $resp['sell_data'] = [];
+                                    $total_sell_amount = 0;
+                                    $total_sell_qty = 0;
+                                }
+
+                                if (!empty($resp)) {
+
+                                    // if (!empty($resp['buy_data'])) {
+                                    $tot_amount = ($total_buy_amount - $total_sell_amount);
+                                    $resp['total_amount'] = strval(number_format((float)$tot_amount, 2, '.', ''));
+                                    $resp['total_qty'] = strval(($total_buy_qty - $total_sell_qty));
+                                    $resp['crypto_id'] = $crypto_id;
+                                    // }else{
+                                    //     $resp['total_amount'] = $total_sell_amount;
+                                    //     $resp['total_qty'] = $total_sell_qty;
+                                    // }
+
+
+                                    $resp_1 = $resp;
+                                    $return['success'] = 1;
+                                    $return['message'] = 'Found!';
+                                } else {
+                                    $return['respData'] = [];
+                                    $return['success'] = 0;
+                                    $return['message'] = 'Not found!';
+                                }
+                                  
+                            }else{
+                                $c_array = array(
+                                    'bitcoin',
+                                    'kodecoin',
+                                    'ethereum'
                                 );
-                                $total_buy_amount = $getBuyCrypto->total_received_amount;
-                                $total_buy_qty = $getBuyCrypto->total_quantity;
-                            } else {
-                                $resp['buy_data'] = [];
-                                $total_buy_amount = 0;
-                                $total_buy_qty = 0;
-                            }
 
-                            $paramUp = array('application_status' => '1', 'crypto_pid' => $crypto_id, 'customer_id' => $customer_id);
+                                foreach($c_array as $key => $val){
+                                    $paramUp = array('application_status' => '1', 'crypto_pid' => $val, 'customer_id' => $customer_id);
 
-                            $getSellCrypto = $this->am->getCryptoSellFinalData($paramUp);
-
-                            if (!empty($getSellCrypto) && $getSellCrypto->customer_id != '') {
-
-                                $resp['sell_data'][] = array(
-                                    'user_id' => $getSellCrypto->customer_id,
-                                    'crypto_id' => $getSellCrypto->crypto_pid,
-                                    'total_received_amount' => $getSellCrypto->total_received_amount,
-                                    'total_quantity' => $getSellCrypto->total_quantity
-                                );
-                                $total_sell_amount = $getSellCrypto->total_received_amount;
-                                $total_sell_qty = $getSellCrypto->total_quantity;
-                            } else {
-                                $resp['sell_data'] = [];
-                                $total_sell_amount = 0;
-                                $total_sell_qty = 0;
+                                    $getBuyCrypto = $this->am->getCryptoBuyFinalData($paramUp);
+        
+        
+        
+                                    if (!empty($getBuyCrypto) && $getBuyCrypto->customer_id != '') {
+        
+                                        $resp['buy_data'][] = array(
+                                            'user_id' => $getBuyCrypto->customer_id,
+                                            'crypto_id' => $getBuyCrypto->crypto_pid,
+                                            'total_received_amount' => $getBuyCrypto->total_received_amount,
+                                            'total_quantity' => $getBuyCrypto->total_quantity
+                                        );
+                                        $total_buy_amount = $getBuyCrypto->total_received_amount;
+                                        $total_buy_qty = $getBuyCrypto->total_quantity;
+                                    } else {
+                                        $resp['buy_data'] = [];
+                                        $total_buy_amount = 0;
+                                        $total_buy_qty = 0;
+                                    }
+        
+                                    $paramUp = array('application_status' => '1', 'crypto_pid' => $crypto_id, 'customer_id' => $customer_id);
+        
+                                    $getSellCrypto = $this->am->getCryptoSellFinalData($paramUp);
+        
+                                    if (!empty($getSellCrypto) && $getSellCrypto->customer_id != '') {
+        
+                                        $resp['sell_data'][] = array(
+                                            'user_id' => $getSellCrypto->customer_id,
+                                            'crypto_id' => $getSellCrypto->crypto_pid,
+                                            'total_received_amount' => $getSellCrypto->total_received_amount,
+                                            'total_quantity' => $getSellCrypto->total_quantity
+                                        );
+                                        $total_sell_amount = $getSellCrypto->total_received_amount;
+                                        $total_sell_qty = $getSellCrypto->total_quantity;
+                                    } else {
+                                        $resp['sell_data'] = [];
+                                        $total_sell_amount = 0;
+                                        $total_sell_qty = 0;
+                                    }
+        
+                                    if (!empty($resp)) {
+        
+                                        // if (!empty($resp['buy_data'])) {
+                                        $tot_amount = ($total_buy_amount - $total_sell_amount);
+                                        $resp['total_amount'] = strval(number_format((float)$tot_amount, 2, '.', ''));
+                                        $resp['total_qty'] = strval(($total_buy_qty - $total_sell_qty));
+                                        $resp['crypto_id'] = $val;
+                                        // }else{
+                                        //     $resp['total_amount'] = $total_sell_amount;
+                                        //     $resp['total_qty'] = $total_sell_qty;
+                                        // }
+        
+        
+                                        $resp_1[] = $resp;
+                                        $return['success'] = 1;
+                                        $return['message'] = 'Found!';
+                                    } else {
+                                        $return['respData'] = [];
+                                        $return['success'] = 0;
+                                        $return['message'] = 'Not found!';
+                                    }
+                                } 
                             }
 
                             if (!empty($resp)) {
-
-                                // if (!empty($resp['buy_data'])) {
-                                $tot_amount = ($total_buy_amount - $total_sell_amount);
-                                $resp['total_amount'] = strval(number_format((float)$tot_amount, 2, '.', ''));
-                                $resp['total_qty'] = strval(($total_buy_qty - $total_sell_qty));
-                                // }else{
-                                //     $resp['total_amount'] = $total_sell_amount;
-                                //     $resp['total_qty'] = $total_sell_qty;
-                                // }
-
-
-                                $return['respData'] = $resp;
+                                $return['respData'] = $resp_1;
                                 $return['success'] = 1;
                                 $return['message'] = 'Found!';
-                            } else {
+                            }else{
                                 $return['respData'] = [];
                                 $return['success'] = 0;
                                 $return['message'] = 'Not found!';
                             }
+                            
                         } else {
                             $return['respData'] = [];
                             $return['success'] = 0;
@@ -3602,7 +3705,7 @@ class Api extends CI_Controller
                                     // print_obj($result_ar);die;
                                     if (!empty($result_ar) && $result_ar->success == 1) {
                                         $logData = array(
-                                            'customer_id' => $customer_id,
+                                            "customer_id" => $customer_id,
                                             "notification_title" => $notification_title,
                                             "notification_body" => $notification_body,
                                             "notification_event" => 'redeem_requested',
