@@ -13,7 +13,7 @@ class InvestmentPlans extends CI_Controller
     {
         if (!empty($this->session->userdata('userid')) && $this->session->userdata('usr_logged_in') == 1) {
             $this->data['page_title'] = 'Investment Plans';
-            $invData = $this->am->getInvPlansData(null, TRUE);
+            $invData = $this->am->getInvPlansData(null, TRUE, 'order_', 'ASC');
 
             if ($invData) {
                 foreach ($invData as $key => $value) {

@@ -296,7 +296,7 @@ class Auth_model extends MY_Model
 		return $this->store($data);
 	}
 
-	public function getCryptoBuyData($param = null, $many = FALSE, $order_by = 'crypto_id', $order = 'DESC')
+	public function getCryptoBuyData($param = null, $many = FALSE, $order_by = 'crypto_buy_id', $order = 'DESC')
 	{
 		$this->table = 'cryptocurrency_bought';
 		if ($param != null && $many == FALSE) {
@@ -308,7 +308,7 @@ class Auth_model extends MY_Model
 		}
 	}
 
-	public function getCryptoBuyFinalData($param = null, $many = FALSE, $order = 'DESC', $order_by = 'cryptocurrency_bought.crypto_id')
+	public function getCryptoBuyFinalData($param = null, $many = FALSE, $order = 'DESC', $order_by = 'cryptocurrency_bought.crypto_buy_id')
 	{
 
 		$this->db->select('
@@ -333,7 +333,7 @@ class Auth_model extends MY_Model
 		}
 	}
 
-	public function getCryptoBuyUserData($param = null, $many = FALSE, $order = 'DESC', $order_by = 'cryptocurrency_bought.crypto_id')
+	public function getCryptoBuyUserData($param = null, $many = FALSE, $order = 'DESC', $order_by = 'cryptocurrency_bought.crypto_buy_id')
 	{
 
 		$this->db->select('

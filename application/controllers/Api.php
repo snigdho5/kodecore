@@ -240,7 +240,7 @@ class Api extends CI_Controller
                                     $password = SMS_PASSWORD;
                                     $to = $phone;
                                     $from = SMS_FROM;
-                                    $text = 'Your%20Registration%20OTP%20is%20'.$otp.'%20KODECORE';
+                                    $text = urlencode('Your Registration OTP is '.$otp.' KODECORE');
                                     $send_url = 'https://103.229.250.200/smpp/sendsms?username='.$username.'&password='.$password.'&to='.$to.'&from='.$from.'&text='.$text;
 
                                     $curl = curl_init();
@@ -918,7 +918,7 @@ class Api extends CI_Controller
                                     $password = SMS_PASSWORD;
                                     $to = $phone;
                                     $from = SMS_FROM;
-                                    $text = 'Your%20Login%20OTP%20is%20'.$otp.'%20KODECORE';
+                                    $text = urlencode('Your Login OTP is '.$otp.' KODECORE');
                                     $send_url = 'https://103.229.250.200/smpp/sendsms?username='.$username.'&password='.$password.'&to='.$to.'&from='.$from.'&text='.$text;
 
                                     $curl = curl_init();
@@ -2212,7 +2212,7 @@ class Api extends CI_Controller
                             }
                         } else {
                             $param = array('status' => 1);
-                            $planData = $this->am->getInvPlansData($param, TRUE);
+                            $planData = $this->am->getInvPlansData($param, TRUE, 'order_', 'ASC');
 
                             // print_obj($planData);die;
 
@@ -2261,7 +2261,6 @@ class Api extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($return);
     }
-
 
     public function onCustomerBuyInvPlan()
     {
@@ -2405,7 +2404,7 @@ class Api extends CI_Controller
                                         // print_obj($result_ar);die;
                                         if (!empty($result_ar) && $result_ar->success == 1) {
                                             $logData = array(
-                                                'customer_id' => $customer_id,
+                                                "customer_id" => $customer_id,
                                                 "notification_title" => $notification_title,
                                                 "notification_body" => $notification_body,
                                                 "notification_event" => 'buy_inv_plan',

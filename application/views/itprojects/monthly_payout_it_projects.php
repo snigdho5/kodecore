@@ -67,6 +67,7 @@
 												<th>Phone</th>
 												<th>IT Project</th>
 												<th>Paid Amount</th>
+												<th>Invoice</th>
 
 											</tr>
 										</thead>
@@ -85,6 +86,7 @@
 														<td><?php echo $val['user_phone']; ?></td>
 														<td><?php echo $val['proj_title']; ?></td>
 														<td><?php echo $val['amount']; ?></td>
+														<td><a href="<?php echo $val['filepath']; ?>" target="_blank"><i class="icofont-file-document"></i></a></td>
 													</tr>
 												<?php
 													$sl++;
