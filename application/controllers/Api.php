@@ -3506,7 +3506,7 @@ class Api extends CI_Controller
                                         $total_buy_qty = 0;
                                     }
         
-                                    $paramUp = array('application_status' => '1', 'crypto_pid' => $crypto_id, 'customer_id' => $customer_id);
+                                    $paramUp = array('application_status' => '1', 'crypto_pid' => $val, 'customer_id' => $customer_id);
         
                                     $getSellCrypto = $this->am->getCryptoSellFinalData($paramUp);
         
@@ -3525,6 +3525,8 @@ class Api extends CI_Controller
                                         $total_sell_amount = 0;
                                         $total_sell_qty = 0;
                                     }
+
+                                    // print_obj($resp);die;
         
                                     if (!empty($resp)) {
         
