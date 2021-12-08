@@ -4615,9 +4615,13 @@ class Api extends CI_Controller
                             $paramUp = array('it_projects_payout.customer_id' => $customer_id);
 
                             $payoutdata = $this->am->getITProjectPayoutUserData($paramUp, TRUE);
-
+                                        
                             if (!empty($payoutdata)) {
                                     foreach ($payoutdata as $key => $value) {
+                                        
+
+                                        $filepath = base_url() . 'api/it-project-invoice/' . encode_url($value->payout_id);
+
                                         $resp[] = array(
                                             'dtime'  => $value->added_dtime,
                                             'payoutid'  => $value->payout_id,
@@ -4628,7 +4632,7 @@ class Api extends CI_Controller
                                             'user_email'  => $value->email,
                                             'user_phone'  => $value->phone,
                                             'proj_title'  => $value->proj_title,
-                                            'filepath' => 'https://kodecore.com/app/uploads/invoices/IT_Project_0_20211126065459.pdf'
+                                            'filepath' => $filepath
                                         );
                                     }
 

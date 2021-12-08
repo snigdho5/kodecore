@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+
 class ITProjects extends CI_Controller
 {
 
@@ -609,632 +610,8 @@ class ITProjects extends CI_Controller
                                 $subtotal_amt = (($amount - $royalty_rate) + $gst_rate);
                             }
 
-
                                 $addamount = ($custData->wallet_amount + $subtotal_amt);
-
-                                $projectsdata = $this->am->getITProjectPayoutUserData(array('it_projects.proj_id'=> $proj_id));
-
-                                // if (!empty($projectsdata)) {
-                                    //  TCPDF Integration
-                                    $tcpdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
-                                    // Set Title
-                                    $tcpdf->SetTitle('Kodecore - IT Project Payout');
-                                    // Set Header Margin
-                                    $tcpdf->SetHeaderMargin(30);
-                                    // Set Top Margin
-                                    $tcpdf->SetTopMargin(20);
-                                    // set Footer Margin
-                                    $tcpdf->setFooterMargin(20);
-                                    // Set Auto Page Break
-                                    $tcpdf->SetAutoPageBreak(true);
-                                    // Set Author
-                                    $tcpdf->SetAuthor('Snigdho');
-                                    // Set Display Mode
-                                    $tcpdf->SetDisplayMode('real', 'default');
-                                    // Set Write text
-                                    // $pdf->Write(5, 'TCPDF Integration');
-                                    // Set Output and file name
-
-                                    // $proj_title = $projectsdata->proj_title;
-                                    // $user_name = $projectsdata->first_name . ' ' . $projectsdata->last_name;
-                                    // $email = $projectsdata->email;
-                                    // $phone = $projectsdata->phone;
-                                    // $amount = $projectsdata->amount;
-                                    // $deductions = $projectsdata->deductions;
-                                    // $gst_per = $projectsdata->gst_per;
-                                    // $gst_rate = $projectsdata->gst_rate;
-                                    // $royalty_per = $projectsdata->royalty_per;
-                                    // $royalty_rate = $projectsdata->royalty_rate;
-                                    // $subtotal = $projectsdata->subtotal_amt;
-                                    // $dtime = $projectsdata->added_dtime;
-
-
-                                    $tcpdf->AddPage();
-                                    
-                                    $html = <<<EOD
-                                  
-                                    
-                                    
-                                        <table style="margin:0 auto">
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="width: 100%; font-size:24px; color: #000; text-align: center;  font-weight: 600; text-transform: capitalize; margin: 0;">
-                                                    Proforma Tax Invoice</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="width: 100%; font-size:14px; color: #000; text-align: center;  font-weight: 400; text-transform: capitalize; margin: 0;">
-                                                    Proforma Invoice</td>
-                                            </tr>
-                                        </tbody>
-                                        </table>
-                                    
-                                        <table style="margin: 0 auto;" border="1" cellpadding="5" cellspacing="0">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="2" rowspan="4" width="87">
-                                                    <p><img src="kodelogo.png" style="width: 100px;"></p>
-                                                </td>
-                                                <td colspan="3" rowspan="4" width="232">
-                                                    <p
-                                                    style="font-size:18px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">KODECORE</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Astra Tower, ANO 402, 4th Floor, <br>
-                                                    Plot No- IIC/1, Action Area- II-C <br>
-                                                    Akankha More, Newtown, Rajarhat <br>
-                                                    Kolkata
-                                                    </p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    GSTIN/UIN: 19FJKPK1540P1ZM</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    State Name : West Bengal, Code : 19</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    E-Mail : account@kodecore.com</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Kodecore.com</p>
-                                                </td>
-                                                <td colspan="6" width="163">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Consignee (Ship to)</p>
-                                                    <p
-                                                    style="font-size:16px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    KCIN/PIN/001</p>
-                                                </td>
-                                                <td colspan="3" width="156">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Dated</p>
-                                                    <p
-                                                    style="font-size:16px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    22-Sep-21
-                                                    </p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" width="163">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Delivery Note</p>
-                                                </td>
-                                                <td colspan="3" width="156">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Mode/Terms of Payment</p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" width="163">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Reference No. & Date.</p>
-                                                </td>
-                                                <td colspan="3" width="156">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Other References</p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" width="163">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Buyer's Order No.</p>
-                                                </td>
-                                                <td colspan="3" width="156">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Dated</p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5" rowspan="2" width="319">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Consignee (Ship to)</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    XYZ Pvt.Ltd</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Abc</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Abc</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    State Name : West Bengal, Code : 19</p>
-                                    
-                                                </td>
-                                    
-                                                <td colspan="6" width="163">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Dispatch Doc No </p>
-                                                </td>
-                                                <td colspan="3" width="156">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Delivery Note Date</p>
-                                                </td>
-                                    
-                                            </tr>
-                                    
-                                            <tr>
-                                                <td colspan="6" width="163">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Dispatched through</p>
-                                                </td>
-                                                <td colspan="3" width="156">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Destination
-                                                    </p>
-                                                </td>
-                                    
-                                            </tr>
-                                    
-                                    
-                                    
-                                            <tr>
-                                                <td colspan="5" rowspan="2" width="319">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Buyer (Bill to)
-                                    
-                                                    </p>
-                                                    <p
-                                                    style="font-size:16px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    XYZ Pvt.Ltd
-                                    
-                                                    </p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Buyer (Bill to)
-                                    
-                                                    </p>
-                                    
-                                                    <p
-                                                    style="font-size:16px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    Abc</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Abc</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    NBCV</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    GSTIN/UIN : XXXXXXXXXXXXX</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    </p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="9" width="319" style="vertical-align: top;">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Terms of Delivery</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="24">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Sl No</p>
-                                                </td>
-                                                <td colspan="4" width="295">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Description of Services</p>
-                                                </td>
-                                                <td colspan="2" width="63">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    HSN/SAC</p>
-                                                </td>
-                                                <td colspan="2" width="61">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Quantity</p>
-                                                </td>
-                                                <td colspan="3" width="71">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Rate</p>
-                                                </td>
-                                                <td width="32">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    per</p>
-                                                </td>
-                                                <td width="92">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Amount</p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td width="24" style="vertical-align: top">
-                                                    <p>01</p>
-                                                </td>
-                                                <td colspan="4" width="295">
-                                                    <p
-                                                    style="font-size:16px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    PDF to DOC Full Slot Monthly Billing</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    (-) Royalty (8%) </p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    (-) TDS (10%)</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    CGST</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    SGST</p>
-                                                </td>
-                                                <td colspan="2" width="63" style="vertical-align: top">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    9985</p>
-                                                    <p></p>
-                                                </td>
-                                                <td colspan="2" width="61" style="vertical-align: top">
-                                                    <p>&nbsp;</p>
-                                                </td>
-                                                <td colspan="3" width="71" style="vertical-align: top">
-                                                    <p>&nbsp;</p>
-                                                    <p>&nbsp;</p>
-                                                    <p>&nbsp;</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    9</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    9</p>
-                                                </td>
-                                                <td width="32" style="vertical-align: top">
-                                                    <p>&nbsp;</p>
-                                                    <p>&nbsp;</p>
-                                                    <p>&nbsp;</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    %</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    %</p>
-                                                </td>
-                                                <td width="92" style="vertical-align: top">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    94,067.80</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    8,880.00</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    10,212.60</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    &nbsp;</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    8,466.10</p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    8,466.10
-                                                    </p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td width="24">
-                                                    <p>&nbsp;</p>
-                                                </td>
-                                                <td colspan="4" width="295">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Total</p>
-                                                </td>
-                                                <td colspan="2" width="63">
-                                                    <p>&nbsp;</p>
-                                                </td>
-                                                <td colspan="2" width="61">
-                                                    <p>&nbsp;</p>
-                                                </td>
-                                                <td colspan="3" width="71">
-                                                    <p>&nbsp;</p>
-                                                </td>
-                                                <td width="32">
-                                                    <p>&nbsp;</p>
-                                                </td>
-                                                <td width="92">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    ₹ 91,908.00</p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Amount Chargeable (in words) E. & O.E
-                                                    </p>
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    INR Ninety One Thousand Nine Hundred Eight Only</p>
-                                                </td>
-                                                <td colspan="8">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    E. & O.E
-                                                    </p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3" rowspan="2" width="178">
-                                                    <p>HSN/SAC</p>
-                                                </td>
-                                                <td rowspan="2" width="84">
-                                                    <p>Taxable Value</p>
-                                                </td>
-                                                <td colspan="4" width="132">
-                                                    <p>Central Tax</p>
-                                                </td>
-                                                <td colspan="5" width="152">
-                                                    <p>State Tax</p>
-                                                </td>
-                                                <td rowspan="2" width="92">
-                                                    <p>Total Tax Amount</p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" width="60">
-                                                    <p>rate</p>
-                                                </td>
-                                                <td colspan="2" width="72">
-                                                    <p>AM</p>
-                                                </td>
-                                                <td colspan="2" width="79">
-                                                    <p>RT</p>
-                                                </td>
-                                                <td colspan="3" width="73">
-                                                    <p>AM</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3" width="178">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    9985</p>
-                                                </td>
-                                                <td width="84">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    94,067.80</p>
-                                                </td>
-                                                <td colspan="2" width="60">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    9%</p>
-                                                </td>
-                                                <td colspan="2" width="72">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    8,466.10</p>
-                                                </td>
-                                                <td colspan="2" width="79">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    9%</p>
-                                                </td>
-                                                <td colspan="3" width="73">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    8,466.10</p>
-                                                </td>
-                                                <td width="92">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    16,932.20</p>
-                                                </td>
-                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3" width="178">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    Total</p>
-                                                </td>
-                                                <td width="84">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    94,067.80</p>
-                                                </td>
-                                                <td colspan="2" width="60">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    &nbsp;</p>
-                                                </td>
-                                                <td colspan="2" width="72">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    8,466.10</p>
-                                                </td>
-                                                <td colspan="2" width="79">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    &nbsp;</p>
-                                                </td>
-                                                <td colspan="3" width="73">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    8,466.10</p>
-                                                </td>
-                                                <td width="92">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    16,932.20</p>
-                                                </td>
-                                            </tr>
-                                    
-                                            <tr>
-                                                <td colspan="14" width="178">
-                                                    <p style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">Tax Amount (in words) : <b>INR Sixteen Thousand Nine Hundred Thirty Two and Twenty paise Only</b></p>
-                                                </td>
-                                            </tr>
-                                    
-                                            <tr>
-                                                <td colspan="6" style="border: 0"></td>
-                                                <td colspan="8" style="border: 0" width="178">
-                                                    <p>Company's Bank Details</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" style="border: 0"></td>
-                                                <td colspan="8" style="border: 0" width="178">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    A/c Holder's Name: <b>TRUVISORY KODECORE (OPC) PVT.Ltd</b></p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" style="border: 0">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Bank Name:</p>
-                                                </td>
-                                                <td colspan="8" style="border: 0" width="178">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    Bank NameBank Name</p>
-                                                </td>
-                                            </tr>
-                                    
-                                            <tr>
-                                                <td colspan="6" style="border: 0">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    A/c No:</p>
-                                                </td>
-                                                <td colspan="8" style="border: 0" width="178">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    X Y Z B A N K</p>
-                                                </td>
-                                            </tr>
-                                    
-                                            <tr>
-                                                <td colspan="6" style="border: 0">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: right; margin: 5px 0px;  font-weight: 500; text-transform: capitalize;">
-                                                    Branch & IFS Code:</p>
-                                                </td>
-                                                <td colspan="8" style="border: 0" width="178">
-                                                    <p
-                                                    style="font-size:15px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    X Y Z B r a n c h
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                    
-                                            <tr>
-                                                <td colspan="7" style="border: 0">
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    Declaration</p>
-                                                    <p
-                                                    style="font-size:14px; color: #000; text-align: left; margin: 5px 0px;  font-weight: 400; text-transform: capitalize;">
-                                                    We declare that this invoice shows the actual price of the goods described and that all particulars
-                                                    are true and correct.</p>
-                                                </td>
-                                                <td colspan="7" style="border: 0;text-align: right;border-left: solid 1px;border-top: solid 1px;"
-                                                    width="178">
-                                                    <p style="font-size:15px; color: #000;  margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    for KODECORE
-                                                    </p>
-                                                    <p style="margin: 5px 0px; "><img src="kodelogo-stamp.png" style=" "></p>
-                                                    <p style="font-size:15px; color: #000;  margin: 5px 0px;  font-weight: 600; text-transform: capitalize;">
-                                                    Authorised Signatory</p>
-                                                </td>
-                                            </tr>
-                                    
-                                    
-                                        </tbody>
-                                        </table>
-                                    
-                                        <table style="width: 100%; margin:0 auto">
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="width: 100%; font-size:18px; color: #000; text-align: center;  font-weight: 600; text-transform: capitalize; margin: 0;">
-                                                    Subject To Kolkata <br>Jurisdiction</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="width: 100%; font-size:14px; color: #000; text-align: center;  font-weight: 400; text-transform: capitalize; margin: 0;">
-                                                    This Is A Kodecore Original Invoice</td>
-                                            </tr>
-                                        </tbody>
-                                        </table>
-                                    
-                                    EOD;
-                                    $tcpdf->writeHTML($html);
-
-
-                                    $filename = 'IT_Project_Payout_'.date("YmdHis", time()) .'.pdf';
-                                    $filepath = base_url().'uploads/invoices/'.$filename;
-
-                                    $fullname = ABS_PATH . $filename;
-                                    
-                                    $tcpdf->Output($fullname, 'F');
-
-                                    // echo APPPATH.'uploads/invoices/'.$filename; die;
-                                // }else{
-                                //     $filepath = '';
-                                // }
-
                                 
-
                                     $ins_userdata = array(
                                         'customer_id'  => $customer_id,
                                         'proj_id'  => $proj_id,
@@ -1247,7 +624,7 @@ class ITProjects extends CI_Controller
                                         'subtotal_amt'  => $subtotal_amt,
                                         'updated_wallet'  => $addamount,
                                         'remarks'  => $remarks,
-                                        'filepath'  => $filepath,
+                                        // 'filepath'  => $filepath,
                                         'added_dtime'  => dtime,
                                         'added_by'  => $this->session->userdata('userid')
                                     );
@@ -1259,6 +636,10 @@ class ITProjects extends CI_Controller
                                     if($upd_user){
                                         //send notification starts
                                         $userDetails  =   $this->am->getCustomerData(array('customer_id' => $customer_id));
+
+                                        $filepath = base_url() . 'api/it-project-invoice/' . encode_url($added);
+                                        
+                                        $updPayout = $this->am->updatePayout(array('filepath'  => $filepath), array('payout_id' => $added));
 
                                         // print_obj($userDetails);die;
                                         if (!empty($userDetails) && $userDetails->fcm_token != '') {
@@ -1349,6 +730,30 @@ class ITProjects extends CI_Controller
         } else {
             redirect(base_url());
         }
+    }
+
+
+    
+    public function onGetITProjectInvoice(){
+        
+        // use spipu\html2pdf\src\Html2Pdf;
+        $payout_id = decode_url(xss_clean($this->uri->segment(3)));
+        
+        $projectsdata = $this->am->getITProjectPayoutUserData(array('it_projects_payout.payout_id'=> $payout_id));
+
+        // print_obj($projectsdata);die;
+
+        if(!empty($projectsdata)){
+            $this->data['payoutData'] = $projectsdata;
+        }else{
+            $this->data['payoutData'] = [];
+        }
+
+        $this->data['logo'] = base_url() . 'uploads/img/kodelogo.png';
+        $this->data['sign'] = base_url() . 'uploads/img/kodelogo-stamp.png';
+
+        $this->load->view('itprojects/vw_itproj_invoice', $this->data, false);
+
     }
 
     public function test_invoice(){
@@ -1848,6 +1253,7 @@ EOD;
 
           echo $filepath;die;
     }
+
 
     public function onGetITProjectByUser()
     {

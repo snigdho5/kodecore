@@ -660,6 +660,15 @@ class Auth_model extends MY_Model
 			$this->table = 'it_projects_payout';
 			return $this->store($data);
 		}
+
+		
+
+	public function updatePayout($data, $param)
+	{
+		$this->table = 'it_projects_payout';
+		return $this->modify($data, $param);
+	}
+
 		public function getITProjectPayoutData($param = null, $many = FALSE, $order_by = 'payout_id', $order = 'DESC')
 		{
 			$this->table = 'it_projects_payout';

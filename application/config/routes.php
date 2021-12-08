@@ -119,6 +119,7 @@ $route['api/it-projects'] = 'Api/onGetITProjects';
 $route['api/user-buy-it-project'] = 'Api/onCustomerBuyITProject';
 $route['api/it-projects-bought-by-user'] = 'Api/onCustomerBoughtITProjects';
 $route['api/it-project-payouts'] = 'Api/onGetPayoutData';
+$route['api/it-project-invoice/(:any)'] = 'ITProjects/onGetITProjectInvoice/$1';
 
 $route['api/investment-plans'] = 'Api/onGetInvPlans';
 $route['api/user-buy-investment-plan'] = 'Api/onCustomerBuyInvPlan';
